@@ -1,0 +1,441 @@
+/* ================================================
+   layout.css — Header, formulario, panels, grid
+   ================================================ */
+
+/* ── Header ── */
+.site-header {
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+.logo-npc   { color: var(--gold); }
+.logo-forge { color: var(--red-bright); }
+
+.header-tagline {
+  font-size: 14px;
+  color: var(--text-mute);
+  font-style: italic;
+  font-family: var(--font-body);
+}
+
+.header-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ── Wrapper principal ── */
+.main-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+/* ── Panel genérico ── */
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  padding: 24px;
+  position: relative;
+}
+
+/* Esquinas decorativas estilo pergamino */
+.panel::before,
+.panel::after {
+  content: '◆';
+  position: absolute;
+  font-size: 10px;
+  color: var(--border-lit);
+  line-height: 1;
+}
+.panel::before { top: 6px; left: 8px; }
+.panel::after  { bottom: 6px; right: 8px; }
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--gold);
+}
+
+/* ── Layout de dos columnas ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Formulario ── */
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.field-group.span-2 { grid-column: 1 / -1; }
+
+.field-group label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.field-group .hint {
+  font-size: 13px;
+  color: var(--text-mute);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Inputs ── */
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  border-radius: 0;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--gold);
+  background: var(--surface-3);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-mute);
+  font-style: italic;
+}
+
+select option { background: var(--surface-2); }
+
+textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}
+
+/* ── Chips de personalidad ── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border: 1px solid var(--border-lit);
+  color: var(--text-dim);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s;
+  background: var(--surface-2);
+}
+.chip:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.chip.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+}
+
+/* ── Botones ── */
+.btn {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 24px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--red);
+  border-color: var(--red-bright);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--red-bright);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--surface-2);
+  border-color: var(--border-lit);
+  color: var(--text-dim);
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-save {
+  background: var(--surface-2);
+  border-color: var(--teal);
+  color: var(--teal-light);
+}
+.btn-save:hover:not(:disabled) {
+  background: var(--teal);
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+/* ── Panel API key ── */
+.api-panel {
+  margin-top: 16px;
+}
+
+.api-help {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.api-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.api-steps li {
+  font-size: 14px;
+  color: var(--text-dim);
+  padding-left: 16px;
+  position: relative;
+}
+.api-steps li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.key-status {
+  font-size: 13px;
+  margin-top: 6px;
+  min-height: 18px;
+  font-style: italic;
+}
+.key-status.ok    { color: var(--teal-light); }
+.key-status.error { color: var(--red-bright); }
+
+/* ── Galería ── */
+.gallery-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.gallery-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--gold);
+}
+.count-badge {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 2px 10px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-mute);
+  border: 1px dashed var(--border);
+}
+.empty-icon  { font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.3; }
+.empty-title { font-family: var(--font-display); font-size: 14px; margin-bottom: 6px; }
+.empty-sub   { font-size: 15px; }
+
+/* ── Tarjeta de galería ── */
+.npc-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+  overflow: hidden;
+}
+.npc-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.card-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.card-archetype {
+  font-size: 13px;
+  color: var(--red-bright);
+  font-style: italic;
+}
+.card-relation {
+  font-size: 13px;
+  color: var(--text-mute);
+  margin-top: 2px;
+}
+
+.card-quote {
+  padding: 12px 16px;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.card-quote::before { content: '"'; color: var(--gold); }
+.card-quote::after  { content: '"'; color: var(--gold); }
+
+.card-actions {
+  display: flex;
+}
+.card-act {
+  flex: 1;
+  padding: 9px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  color: var(--text-mute);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.card-act:last-child { border-right: none; }
+.card-act:hover      { background: var(--surface-2); color: var(--text); }
+.card-act.view:hover { color: var(--gold); }
+.card-act.del:hover  { color: var(--red-bright); }
+
+/* ── Loading state ── */
+.loading-msg {
+  text-align: center;
+  padding: 48px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+}
+.loading-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  animation: flicker 1.5s ease-in-out infinite;
+}
+.loading-sub {
+  font-size: 15px;
+  color: var(--text-mute);
+  font-style: italic;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .two-col { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .site-header { padding: 0 16px; }
+  .header-tagline { display: none; }
+}

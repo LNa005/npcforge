@@ -1,0 +1,111 @@
+/* ================================================
+   base.css — Variables, reset, tipografía global
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=VT323&display=swap');
+
+/* ── Variables ── */
+:root {
+  /* Fondo y superficies */
+  --bg:          #0d0c0e;
+  --surface-1:   #141218;
+  --surface-2:   #1c1921;
+  --surface-3:   #231f2a;
+
+  /* Bordes */
+  --border:      #2e2a38;
+  --border-lit:  #4a4560;
+
+  /* Acentos */
+  --gold:        #c9a84c;
+  --gold-light:  #e8c96a;
+  --red:         #c0392b;
+  --red-bright:  #e74c3c;
+  --teal:        #2eab9a;
+  --teal-light:  #4ecdc4;
+  --purple:      #7c5cbf;
+
+  /* Texto */
+  --text:        #e8dfc8;
+  --text-dim:    #8a8090;
+  --text-mute:   #3e3848;
+
+  /* Sombras */
+  --shadow-sm:   2px 2px 0 #000;
+  --shadow-md:   4px 4px 0 #000;
+  --shadow-lg:   6px 6px 0 #000;
+
+  /* Tipografía */
+  --font-display: 'Cinzel', serif;           /* Títulos, nombres */
+  --font-body:    'Crimson Text', serif;     /* Texto largo */
+  --font-mono:    'VT323', monospace;        /* Stats, valores */
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--text);
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 10% 50%, rgba(201,168,76,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(192,57,43,0.04) 0%, transparent 45%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='rgba(255,255,255,0.015)'/%3E%3C/svg%3E");
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── Tipografía base ── */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+a {
+  color: var(--teal-light);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ── Utilidades ── */
+.hidden { display: none !important; }
+
+.text-gold   { color: var(--gold); }
+.text-red    { color: var(--red-bright); }
+.text-teal   { color: var(--teal-light); }
+.text-dim    { color: var(--text-dim); }
+
+.mono { font-family: var(--font-mono); font-size: 20px; }
+
+/* ── Notificación toast ── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--teal);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  padding: 10px 18px;
+  border: 2px solid var(--teal-light);
+  box-shadow: var(--shadow-md);
+  z-index: 999;
+  transform: translateY(60px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+}
+#toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}

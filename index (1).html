@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NPCForge — Fichas de personaje RPG</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/sheet.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-logo">
+      <span class="logo-npc">NPC</span><span class="logo-forge">Forge</span>
+    </div>
+    <div class="header-divider"></div>
+    <p class="header-tagline">Convierte a las personas de tu vida en personajes de RPG</p>
+    <nav style="margin-left:auto; display:flex; gap:8px;">
+      <button class="btn btn-secondary active" data-tab="crear">⚔ Crear</button>
+      <button class="btn btn-secondary"        data-tab="aldea">🏘 Mi aldea</button>
+    </nav>
+  </header>
+
+  <div class="main-wrapper">
+
+    <!-- TAB: CREAR -->
+    <section class="tab-view active" id="tab-crear">
+      <div class="two-col">
+
+        <div>
+          <div class="panel api-panel">
+            <h2 class="panel-title">API Key de Gemini</h2>
+            <p class="api-help">Gratis, sin tarjeta de crédito:</p>
+            <ol class="api-steps">
+              <li>Ve a <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a></li>
+              <li>Haz clic en <strong>Get API Key</strong></li>
+              <li>Crea una key y pégala aquí</li>
+            </ol>
+            <input type="password" id="apiKey" placeholder="AIzaSy…" autocomplete="off">
+            <p class="key-status" id="keyStatus"></p>
+          </div>
+
+          <div class="panel" style="margin-top:0">
+            <h2 class="panel-title">¿Cómo funciona?</h2>
+            <p style="font-size:16px;color:var(--text-dim);line-height:1.7">
+              Describe a una persona de tu vida con el máximo detalle posible.
+              La IA generará una ficha RPG con estadísticas psicológicas,
+              motivaciones ocultas, punto débil y cómo ganar su confianza.
+            </p>
+            <p style="font-size:15px;color:var(--text-mute);margin-top:10px;font-style:italic">
+              Cuanto más detalle escribas, más precisa será la ficha.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel">
+            <h2 class="panel-title">Datos del personaje</h2>
+            <form id="npcForm" class="form-stack">
+
+              <div class="form-row">
+                <div class="field-group">
+                  <label for="fNombre">Nombre</label>
+                  <input type="text" id="fNombre" placeholder="¿Cómo se llama?">
+                </div>
+                <div class="field-group">
+                  <label for="fRelacion">Relación contigo</label>
+                  <select id="fRelacion">
+                    <option value="">— Sin especificar —</option>
+                    <option>Amigo/a íntimo</option>
+                    <option>Conocido/a</option>
+                    <option>Familiar</option>
+                    <option>Pareja / ex pareja</option>
+                    <option>Compañero/a de trabajo</option>
+                    <option>Jefe / Superior</option>
+                    <option>Rival</option>
+                    <option>Mentor/a</option>
+                    <option>Vecino/a</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="field-group">
+                  <label for="fHobby">Hobby / Obsesión</label>
+                  <input type="text" id="fHobby" placeholder="Lo que más le gusta hablar…">
+                </div>
+                <div class="field-group">
+                  <label for="fTrabajo">Trabajo / Rol</label>
+                  <input type="text" id="fTrabajo" placeholder="A qué se dedica">
+                </div>
+              </div>
+
+              <div class="field-group span-2">
+                <label>Personalidad — elige todos los que encajen</label>
+                <div class="chip-row" id="personalityChips"></div>
+              </div>
+
+              <div class="field-group span-2">
+                <label for="fDesc">Descripción libre</label>
+                <p class="hint">¿Cómo la conociste? ¿Qué te genera? ¿Algo destacable? Escribe como si se lo contaras a un amigo.</p>
+                <textarea id="fDesc" placeholder="Cuéntame todo lo que quieras sobre esta persona…"></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit"  class="btn btn-primary"   id="generateBtn">⚔ Generar ficha</button>
+                <button type="button"  class="btn btn-secondary" id="clearBtn">✕ Limpiar</button>
+              </div>
+
+            </form>
+          </div>
+
+          <div id="resultArea" class="hidden"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB: ALDEA -->
+    <section class="tab-view hidden" id="tab-aldea">
+      <div class="gallery-header">
+        <h2 class="gallery-title">🏘 Mi aldea</h2>
+        <span class="count-badge" id="npcCount">0 personajes</span>
+      </div>
+      <div class="cards-grid" id="cardsGrid"></div>
+    </section>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
