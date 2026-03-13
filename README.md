@@ -26,10 +26,10 @@ Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explor
 
 <div align="center">
 
-### ✦ Generador de fichas RPG
+### 🌸 Generador de fichas RPG
 ![App](screenshots/screen_app.png)
 
-### ✦ Aldea explorable
+### 🌸 Aldea explorable
 ![Game](screenshots/screen_game.png)
 
 </div>
@@ -38,17 +38,23 @@ Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explor
 
 ## 🌟 Lo que ya funciona
 
-✅ Generación de ficha RPG completa con IA (Mistral)  
-✅ 6 stats psicológicos animados  
-✅ Editor de sprite pixel art 16×16  
-✅ Galería "Mi aldea" con tarjetas  
-✅ Mapa top-down explorable — plaza, casas, caminos, decoración  
-✅ Una casa por cada NPC con tejado de color único  
-✅ NPCs con movimiento libre (wandering por su zona)  
-✅ Avatar del jugador personalizable  
-✅ Chat con NPCs en personaje vía Mistral  
-✅ Teclado capturado correctamente durante el chat  
-✅ Sin servidor, sin registro — todo en `localStorage` 🌷  
+🌸 Generación de ficha RPG completa con IA (Mistral)  
+🌸 6 stats psicológicos animados  
+🌸 Editor de sprite pixel art 16×16  
+🌸 Galería "Mi aldea" con tarjetas  
+🌸 Mapa top-down explorable con Phaser.js  
+🌸 Plaza central con adoquines, fuente, faroles y bancos  
+🌸 Una casa por cada NPC con tejado de color único  
+🌸 Nombre del NPC sobre la puerta de su casa  
+🌸 Nombre del NPC flotante encima de su sprite  
+🌸 NPCs con movimiento libre (wandering por su zona)  
+🌸 Avatar del jugador personalizable con editor de sprite  
+🌸 Chat con NPCs en personaje vía Mistral  
+🌸 Teclado capturado correctamente durante el chat (espacio y WASD)  
+🌸 Panel de misiones activas — aparece al acercarte a un NPC  
+🌸 Colisionadores en casas, árboles y fuente  
+🌸 Mapa pantalla completa  
+🌸 Sin servidor, sin registro — todo en `localStorage` 🌷  
 
 ---
 
@@ -57,6 +63,7 @@ Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explor
 ```
 npcforge/
 ├── index.html
+├── README.md
 ├── screenshots/
 │   ├── screen_app.png
 │   └── screen_game.png
@@ -75,7 +82,8 @@ npcforge/
     │   └── game.css
     └── js/
         ├── world.js     ← Mapa Phaser
-        └── dialog.js    ← Chat con NPCs
+        ├── dialog.js    ← Chat con NPCs
+        └── missions.js  ← Sistema de misiones
 ```
 
 ---
@@ -83,22 +91,14 @@ npcforge/
 ## 🗺️ Hoja de ruta
 
 ### 🐛 Bugs pendientes
-- [ ] 🐛 Colisiones con casas y árboles — revisar solidGroup
+- [ ] 🐛 Interacción con botones del panel de misiones (Phaser captura los clicks)
 
-### 🏗️ Fase 3 — Mapa rico *(en progreso)*
-- [x] 🏛️ Plaza central con adoquines y fuente
-- [x] 🏠 Una casa por cada NPC guardado con tejado de color único
-- [x] 🧍 NPCs con movimiento libre por su zona
-- [x] 🪑 Decoración — bancos, faroles, señal de bienvenida
-- [x] 🛤️ Caminos conectando casas con la plaza
-- [ ] 🌲 Bosque exterior denso con colisiones
-- [ ] 🏷️ Nombre del NPC visible encima del sprite en el mapa
-
-### 📋 Fase 4 — Sistema de misiones
-- [ ] 📌 HUD con las 3 misiones activas de cada NPC
-- [ ] ✅ Marcar misiones como completadas
-- [ ] 🎉 Evento / recompensa al completar una misión
-- [ ] 📜 Historial de misiones completadas
+### 📋 Fase 4 — Sistema de misiones *(en progreso)*
+- [x] 🌸 Panel HUD con las 3 misiones del NPC cercano
+- [x] 🌸 Se muestra/oculta automáticamente por proximidad
+- [ ] 🌸 Marcar misiones como completadas (bug de clicks pendiente)
+- [ ] 🌸 Evento / recompensa al completar una misión
+- [ ] 🌸 Historial de misiones completadas
 
 ### 📈 Fase 5 — Relaciones vivas
 - [ ] 💹 Stats que evolucionan según cómo hablas con el NPC
@@ -151,8 +151,6 @@ npcforge/
 
 <div align="center">
 
-*Hecho con demasiado amor, mangoloco y ganas 💜*
-
-por ahora nada más, se continua después de una peli o algo así
+*Hecho con demasiado amor, mostersito y ganas 💜*
 
 </div>
