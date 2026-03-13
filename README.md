@@ -1,30 +1,53 @@
-# ⚔️ NPCForge ✨
+<div align="center">
 
-**Las personas de tu vida, convertidas en personajes de RPG 🎀**
+# 🌸 NPCForge ✨
 
-*Analiza, crea, explora — y algún día, comparte tu aldea con el mundo 🌍*
+**De la vida real a tu propia aldea virtual 🎀**
 
----
+*Convierte a las personas de tu entorno en NPCs interactivos con análisis psicológico generado por IA ⚡*
 
-## 🔮 ¿Qué es NPCForge?
+![estado](https://img.shields.io/badge/estado-en%20desarrollo-ff6b6b?style=flat-square)
+![stack](https://img.shields.io/badge/stack-vanilla%20js%20%2B%20phaser3-c9a84c?style=flat-square)
+![ia](https://img.shields.io/badge/IA-Mistral-7b5ea7?style=flat-square)
 
-Describes a alguien de tu vida. La IA genera una **ficha RPG psicológica** completa: stats, motivación oculta, punto débil, cómo ganarte su confianza y misiones de relación 📜
-
-Diseñas su sprite en pixel art. Lo guardas en tu aldea. Explorar un mapa top-down donde puedes hablar con ellos en personaje, completar misiones y ver cómo evoluciona vuestra relación con el tiempo ⚡
-
-> *El objetivo final: una app nativa para móvil y PC, con servidor propio y aldeas multijugador donde explorar el mundo de otras personas.*
+</div>
 
 ---
 
-## 🌟 Estado actual
+## 💜 ¿Qué es NPCForge?
 
-✅ Generación de ficha RPG con IA (Mistral)  
+Describes a alguien de tu vida. La IA genera una **ficha RPG psicológica** completa — stats, motivación oculta, punto débil, cómo ganarte su confianza y misiones de relación 🔮
+
+Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explorar un mapa top-down** donde caminarás por una aldea con casas, plaza y NPCs que deambulan libremente y responden en personaje gracias a la IA ⚡
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
+
+### ✦ Generador de fichas RPG
+![App](screenshots/screen_app.png)
+
+### ✦ Aldea explorable
+![Game](screenshots/screen_game.png)
+
+</div>
+
+---
+
+## 🌟 Lo que ya funciona
+
+✅ Generación de ficha RPG completa con IA (Mistral)  
 ✅ 6 stats psicológicos animados  
 ✅ Editor de sprite pixel art 16×16  
 ✅ Galería "Mi aldea" con tarjetas  
-✅ Mapa top-down explorable (Phaser.js)  
+✅ Mapa top-down explorable — plaza, casas, caminos, decoración  
+✅ Una casa por cada NPC con tejado de color único  
+✅ NPCs con movimiento libre (wandering por su zona)  
 ✅ Avatar del jugador personalizable  
-✅ Chat con NPCs en personaje  
+✅ Chat con NPCs en personaje vía Mistral  
+✅ Teclado capturado correctamente durante el chat  
 ✅ Sin servidor, sin registro — todo en `localStorage` 🌷  
 
 ---
@@ -34,6 +57,9 @@ Diseñas su sprite en pixel art. Lo guardas en tu aldea. Explorar un mapa top-do
 ```
 npcforge/
 ├── index.html
+├── screenshots/
+│   ├── screen_app.png
+│   └── screen_game.png
 ├── css/
 │   ├── base.css
 │   ├── layout.css
@@ -54,64 +80,54 @@ npcforge/
 
 ---
 
-## 🚀 Setup
-
-**1.** API key gratis en [console.mistral.ai](https://console.mistral.ai) — sin tarjeta 💳
-
-**2.** Servidor local:
-```bash
-python -m http.server 8080
-# o Live Server en VS Code
-```
-
-**3.** Pega tu key → describe a alguien → **⚔️ Generar ficha** ✨
-
----
-
 ## 🗺️ Hoja de ruta
 
 ### 🐛 Bugs pendientes
-- [ ] Chat con NPCs — espacio y WASD no responden con el diálogo abierto (Phaser sigue capturando teclas)
+- [ ] 🐛 Colisiones con casas y árboles — revisar solidGroup
 
-### 🏗️ Fase 3 — Mapa rico
-- [ ] 🏛️ Plaza central con adoquines y fuente
-- [ ] 🏠 Una casa por cada NPC guardado
-- [ ] 🧍 NPCs frente a su propia casa
-- [ ] 🪑 Objetos decorativos — bancos, señales
-- [ ] 🛤️ Caminos conectando casas con la plaza
+### 🏗️ Fase 3 — Mapa rico *(en progreso)*
+- [x] 🏛️ Plaza central con adoquines y fuente
+- [x] 🏠 Una casa por cada NPC guardado con tejado de color único
+- [x] 🧍 NPCs con movimiento libre por su zona
+- [x] 🪑 Decoración — bancos, faroles, señal de bienvenida
+- [x] 🛤️ Caminos conectando casas con la plaza
+- [ ] 🌲 Bosque exterior denso con colisiones
+- [ ] 🏷️ Nombre del NPC visible encima del sprite en el mapa
 
 ### 📋 Fase 4 — Sistema de misiones
 - [ ] 📌 HUD con las 3 misiones activas de cada NPC
 - [ ] ✅ Marcar misiones como completadas
-- [ ] 🎉 Recompensa / evento al completar una misión
+- [ ] 🎉 Evento / recompensa al completar una misión
 - [ ] 📜 Historial de misiones completadas
 
 ### 📈 Fase 5 — Relaciones vivas
 - [ ] 💹 Stats que evolucionan según cómo hablas con el NPC
-- [ ] 🔔 Indicador visual de cambio de stat
+- [ ] 🔔 Indicador visual de cambio de stat tras conversación
 - [ ] ❤️ Nivel de relación global (desconocido → aliado → rival…)
 
 ### 🎮 Fase 6 — Animaciones
-- [ ] 🚶 Caminar en 4 direcciones
+- [ ] 🚶 Caminar en 4 direcciones (sprite sheet)
 - [ ] 💤 Idle animation
-- [ ] 🌀 NPCs con movimiento aleatorio suave
+- [ ] 🌀 Animación de NPCs más natural
 
 ### 📱 Fase 7 — App nativa
 - [ ] 🖥️ Versión de escritorio (Electron o Tauri)
 - [ ] 📱 Versión móvil (Capacitor o PWA)
-- [ ] 🎮 Controles táctiles para el mapa
+- [ ] 🕹️ Controles táctiles para el mapa
 
 ### 🌐 Fase 8 — Servidor y multijugador
 - [ ] 🗄️ Backend propio (Node.js + base de datos)
 - [ ] 🔐 Registro y login de usuarios
 - [ ] ☁️ Aldeas guardadas en la nube
-- [ ] 👥 Multijugador — por definir (¿visitar aldeas ajenas? ¿eventos globales? ¿NPCs compartidos?)
+- [ ] 👥 Multijugador — *por definir* (¿visitar aldeas ajenas? ¿eventos globales? ¿NPCs compartidos?)
 
 ### 🌈 Ideas futuras
-- [ ] 📸 Exportar ficha como imagen
+- [ ] 📸 Exportar ficha como imagen compartible
 - [ ] ⚖️ Comparar dos NPCs
-- [ ] 💾 Backup / import JSON de la aldea
+- [ ] 💾 Backup / import JSON de la aldea completa
 - [ ] 🌍 Explorar aldeas públicas de otros jugadores
+- [ ] 🎵 Música y efectos de sonido ambient
+- [ ] 🌦️ Ciclo día/noche en el mapa
 
 ---
 
@@ -123,7 +139,7 @@ python -m http.server 8080
 💾 **localStorage** — persistencia local  
 🎨 **CSS custom properties** — theming completo  
 
-## 🔭 Stack futuro (tentativo)
+## 🔭 Stack futuro *(tentativo)*
 
 🖥️ **Electron / Tauri** — app de escritorio  
 📱 **Capacitor / PWA** — app móvil  
@@ -133,4 +149,8 @@ python -m http.server 8080
 
 ---
 
-*Hecho con demasiado café y ganas 💜*
+<div align="center">
+
+*Hecho con demasiado amor, mangoloco y ganas 💜*
+
+</div>
