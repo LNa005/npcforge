@@ -61,12 +61,19 @@
   position: fixed;
   inset: 0;
   background: #0a0910;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+#gameCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 #gameCanvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
