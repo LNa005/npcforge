@@ -257,3 +257,164 @@
   .stat-row { grid-template-columns: 100px 1fr 32px; }
   .sheet-name { font-size: 24px; }
 }
+
+
+/* ================================================
+   Sprite Editor
+   ================================================ */
+
+.sprite-editor-panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 22px 24px;
+  animation: reveal 0.3s ease;
+}
+
+.sprite-editor {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.se-preview-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.se-canvas {
+  border: 1px solid var(--border-lit);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: repeating-conic-gradient(
+    #1a1820 0% 25%, #221e2a 0% 50%
+  ) 0 0 / 20px 20px;
+}
+
+.se-preview-label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+}
+
+.se-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.se-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.se-label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  min-width: 72px;
+}
+
+.se-swatches {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+  flex-shrink: 0;
+}
+
+.swatch:hover  { transform: scale(1.25); border-color: var(--text); }
+.swatch.active {
+  border-color: var(--gold);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.se-btn-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.se-opt-btn {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  padding: 5px 11px;
+  border: 1px solid var(--border-lit);
+  background: var(--surface-2);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+
+.se-opt-btn:hover  { border-color: var(--gold); color: var(--gold); }
+.se-opt-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+}
+
+.se-save-row {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Botón sprite en sheet footer */
+.btn-sprite {
+  border-color: var(--purple);
+  color: var(--purple);
+}
+.btn-sprite:hover {
+  background: var(--purple);
+  color: #fff;
+}
+
+/* Sprite en tarjetas de la aldea */
+.card-sprite {
+  float: right;
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  margin: 0 0 4px 8px;
+  border: 1px solid var(--border);
+}
+
+.card-sprite-empty {
+  float: right;
+  width: 40px;
+  height: 40px;
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-mute);
+  margin: 0 0 4px 8px;
+}
+
+@media (max-width: 600px) {
+  .sprite-editor { flex-direction: column; }
+  .se-label { min-width: 56px; }
+}

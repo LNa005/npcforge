@@ -80,12 +80,12 @@ function setupApiKeyField() {
   field.addEventListener('input', () => {
     const key = field.value.trim();
     if (!key) { status.textContent = ''; status.className = 'key-status'; return; }
-    if (key.length > 20) {
+    if (key.startsWith('AIza') && key.length > 20) {
       status.textContent = '✓ Formato correcto';
       status.className   = 'key-status ok';
       Storage.saveApiKey(key);
     } else {
-      status.textContent = 'La key parece demasiado corta';
+      status.textContent = 'Debe empezar por AIza…';
       status.className   = 'key-status error';
     }
   });
@@ -233,8 +233,10 @@ function renderSheet(npc, container) {
       <div class="sheet-footer">
         <button class="btn btn-save"      onclick="saveCurrentNpc()">💾 Guardar en la aldea</button>
         <button class="btn btn-secondary" onclick="copySheetJson()">📋 Copiar JSON</button>
+        <button class="btn btn-sprite"    onclick="toggleSpriteEditor()">🎨 Diseñar sprite</button>
       </div>
-    </div>`;
+    </div>
+    <div id="spriteEditorPanel" class="sprite-editor-panel hidden"></div>`;
 
   requestAnimationFrame(() => {
     container.querySelectorAll('.stat-fill').forEach(bar => {
@@ -247,8 +249,39 @@ function renderSheet(npc, container) {
 /* ── Guardar / copiar ── */
 function saveCurrentNpc() {
   if (!state.currentSheet) return;
+  // Si el editor de sprite está abierto, captura el estado
+  const panel = document.getElementById('spriteEditorPanel');
+  if (panel && !panel.classList.contains('hidden') && panel.dataset.mounted) {
+    state.currentSheet.spriteData  = SpriteEditor.getSprite();
+    state.currentSheet.spriteState = SpriteEditor.getState();
+  }
   Storage.save(state.currentSheet);
   showToast('✦ Personaje guardado en la aldea');
+}
+
+/** Llamado desde el botón dentro del sprite editor */
+function saveSpriteAndNpc() {
+  if (!state.currentSheet) return;
+  state.currentSheet.spriteData  = SpriteEditor.getSprite();
+  state.currentSheet.spriteState = SpriteEditor.getState();
+  Storage.save(state.currentSheet);
+  showToast('✦ Sprite y personaje guardados');
+}
+
+/** Abre/cierra el panel del sprite editor */
+function toggleSpriteEditor() {
+  const panel = document.getElementById('spriteEditorPanel');
+  if (!panel) return;
+  if (panel.classList.contains('hidden')) {
+    panel.classList.remove('hidden');
+    if (!panel.dataset.mounted) {
+      SpriteEditor.mount(panel, state.currentSheet?.spriteState ?? null);
+      panel.dataset.mounted = 'true';
+    }
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    panel.classList.add('hidden');
+  }
 }
 
 function copySheetJson() {
@@ -274,9 +307,13 @@ function renderGallery() {
     return;
   }
   grid.innerHTML = npcs.map(npc => {
-    const quote = (npc.sheet.dialogo_tipico || '').slice(0, 80);
+    const quote     = (npc.sheet.dialogo_tipico || '').slice(0, 80);
+    const spriteImg = npc.spriteData
+      ? `<img class="card-sprite" src="${npc.spriteData}" alt="sprite">`
+      : `<div class="card-sprite-empty">?</div>`;
     return `<div class="npc-card">
       <div class="card-header">
+        ${spriteImg}
         <p class="card-name">${npc.form.nombre || 'Sin nombre'}</p>
         <p class="card-archetype">${npc.sheet.arquetipo || ''}</p>
         <p class="card-relation">${npc.form.relacion || ''}</p>
@@ -307,6 +344,21 @@ function viewNpc(id) {
   const resultArea = document.getElementById('resultArea');
   resultArea.classList.remove('hidden');
   renderSheet(npc, resultArea);
+
+  // Si el NPC tiene sprite guardado, abre el editor con ese estado
+  const panel = document.getElementById('spriteEditorPanel');
+  if (panel) {
+    panel.innerHTML = '';
+    panel.removeAttribute('data-mounted');
+    if (npc.spriteState) {
+      panel.classList.remove('hidden');
+      SpriteEditor.mount(panel, npc.spriteState);
+      panel.dataset.mounted = 'true';
+    } else {
+      panel.classList.add('hidden');
+    }
+  }
+
   resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
