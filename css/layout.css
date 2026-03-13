@@ -243,6 +243,12 @@ textarea {
   color: var(--gold);
 }
 
+.btn-secondary.active {
+  background: var(--red);
+  border-color: var(--red-bright);
+  color: #fff;
+}
+
 .btn-save {
   background: var(--surface-2);
   border-color: var(--teal);
