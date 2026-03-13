@@ -4,361 +4,673 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NPCForge — README</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;1,400&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d0c0e; --surface: #141218; --surface2: #1c1921;
-      --border: #2e2a38; --gold: #c9a84c; --gold-l: #e8c96a;
-      --red: #c0392b; --red-b: #e74c3c; --teal: #2eab9a; --teal-l: #4ecdc4;
-      --text: #e8dfc8; --dim: #8a8090; --mute: #3e3848;
-      --display: 'Cinzel', serif; --body: 'Crimson Text', serif; --mono: 'VT323', monospace;
+      --bg:       #0d0c0e;
+      --s1:       #141218;
+      --s2:       #1c1921;
+      --s3:       #231f2a;
+      --border:   #2e2a38;
+      --border-l: #4a4560;
+      --gold:     #c9a84c;
+      --gold-l:   #e8c96a;
+      --red:      #c0392b;
+      --red-b:    #e74c3c;
+      --teal:     #2eab9a;
+      --teal-l:   #4ecdc4;
+      --purple:   #7c5cbf;
+      --orange:   #e67e22;
+      --green:    #27ae60;
+      --text:     #e8dfc8;
+      --dim:      #8a8090;
+      --mute:     #3e3848;
+      --display:  'Cinzel', serif;
+      --body:     'Crimson Text', serif;
+      --mono:     'VT323', monospace;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      background: var(--bg); color: var(--text);
-      font-family: var(--body); font-size: 18px; line-height: 1.7;
-      background-image: radial-gradient(ellipse at 20% 30%, rgba(201,168,76,.04) 0%, transparent 50%);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 18px;
+      line-height: 1.7;
+      background-image:
+        radial-gradient(ellipse at 15% 20%, rgba(201,168,76,.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 70%, rgba(192,57,43,.04) 0%, transparent 45%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.01) 39px, rgba(255,255,255,.01) 40px);
     }
-    a { color: var(--teal-l); }
+    a { color: var(--teal-l); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    /* Hero */
+    /* ── HERO ── */
     .hero {
-      background: linear-gradient(160deg, #1a0e0a 0%, #0e1020 50%, #0a0d16 100%);
+      background: linear-gradient(160deg, #1a0e0a 0%, #0e0f1e 55%, #080d1a 100%);
       border-bottom: 2px solid var(--gold);
-      padding: 64px 40px 48px;
+      padding: 72px 40px 56px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .hero::before {
-      content: '⚔';
-      position: absolute; left: 40px; top: 50%; transform: translateY(-50%);
-      font-size: 120px; opacity: 0.05; color: var(--gold);
+    .hero-ornament {
+      position: absolute;
+      font-size: 200px;
+      opacity: .03;
+      color: var(--gold);
+      top: 50%; transform: translateY(-50%);
+      pointer-events: none;
+      font-family: serif;
     }
-    .hero::after {
-      content: '⚔';
-      position: absolute; right: 40px; top: 50%; transform: translateY(-50%) scaleX(-1);
-      font-size: 120px; opacity: 0.05; color: var(--gold);
-    }
-    .hero-label {
-      font-family: var(--display); font-size: 11px; letter-spacing: .25em;
-      color: var(--red-b); text-transform: uppercase; margin-bottom: 12px;
+    .hero-ornament.left  { left: -20px; }
+    .hero-ornament.right { right: -20px; transform: translateY(-50%) scaleX(-1); }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 20px;
+      letter-spacing: .25em;
+      color: var(--red-b);
+      margin-bottom: 12px;
     }
     .hero-title {
-      font-family: var(--display); font-size: 52px; font-weight: 700;
-      letter-spacing: .06em; line-height: 1;
-      margin-bottom: 16px;
+      font-family: var(--display);
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      line-height: 1;
+      margin-bottom: 18px;
     }
-    .hero-title .npc { color: var(--gold-l); }
+    .hero-title .npc   { color: var(--gold-l); }
     .hero-title .forge { color: var(--red-b); }
-    .hero-sub {
-      font-family: var(--body); font-size: 20px; font-style: italic;
-      color: var(--dim); max-width: 500px; margin: 0 auto 28px;
+    .hero-desc {
+      font-size: 20px;
+      font-style: italic;
+      color: var(--dim);
+      max-width: 560px;
+      margin: 0 auto 28px;
     }
-    .hero-badge {
-      display: inline-block; font-family: var(--display); font-size: 10px;
-      letter-spacing: .1em; padding: 6px 14px;
-      border: 1px solid var(--border); color: var(--dim); margin: 0 4px;
+    .hero-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      font-family: var(--display);
+      font-size: 10px;
+      letter-spacing: .1em;
+      padding: 5px 14px;
+      border: 1px solid;
+      text-transform: uppercase;
+    }
+    .badge-gold   { border-color: var(--gold);   color: var(--gold); }
+    .badge-teal   { border-color: var(--teal-l); color: var(--teal-l); }
+    .badge-red    { border-color: var(--red-b);  color: var(--red-b); }
+    .badge-purple { border-color: var(--purple); color: var(--purple); }
+    .badge-green  { border-color: var(--green);  color: var(--green); }
+
+    /* ── NAV INTERNA ── */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,12,14,.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .nav-link {
+      font-family: var(--display);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 14px 18px;
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      transition: color .2s, background .2s;
+    }
+    .nav-link:hover { color: var(--gold); background: var(--s1); text-decoration: none; }
+    .nav-link:first-child { border-left: 1px solid var(--border); }
+
+    /* ── WRAP ── */
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 56px 24px 96px; }
+
+    /* ── SECCIONES ── */
+    .section { margin-bottom: 64px; scroll-margin-top: 52px; }
+    .section-heading {
+      font-family: var(--display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-heading .icon { font-size: 20px; }
+
+    /* ── TECH STACK ── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .tech-card {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      transition: border-color .2s, transform .15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .tech-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+    }
+    .tech-card.color-gold::before   { background: var(--gold); }
+    .tech-card.color-teal::before   { background: var(--teal-l); }
+    .tech-card.color-red::before    { background: var(--red-b); }
+    .tech-card.color-purple::before { background: var(--purple); }
+    .tech-card.color-orange::before { background: var(--orange); }
+    .tech-card.color-green::before  { background: var(--green); }
+
+    .tech-card:hover { border-color: var(--border-l); transform: translateY(-2px); }
+    .tech-icon  { font-size: 28px; display: block; margin-bottom: 8px; }
+    .tech-name  { font-family: var(--display); font-size: 13px; color: var(--text); margin-bottom: 4px; }
+    .tech-role  { font-size: 15px; color: var(--dim); line-height: 1.5; }
+    .tech-label {
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 16px;
+      color: var(--mute);
     }
 
-    /* Layout */
-    .wrap { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
-
-    /* Secciones */
-    .section { margin-bottom: 56px; }
-    .section-title {
-      font-family: var(--display); font-size: 13px; font-weight: 700;
-      letter-spacing: .2em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 24px;
-      padding-bottom: 10px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 10px;
+    /* ── ESTRUCTURA DE ARCHIVOS ── */
+    .file-tree {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      font-family: var(--mono);
+      font-size: 21px;
+      line-height: 2.1;
     }
-    .section-title span { font-size: 18px; }
+    .ft-dir      { color: var(--gold); }
+    .ft-file     { color: var(--text); }
+    .ft-desc     { color: var(--mute); font-size: 18px; }
+    .ft-comment  { color: var(--teal-l); font-size: 17px; }
+    .ft-indent1  { padding-left: 24px; display: block; }
+    .ft-indent2  { padding-left: 48px; display: block; }
 
-    /* Paso a paso */
-    .steps { display: flex; flex-direction: column; gap: 0; }
+    /* ── CÓMO USARLO ── */
+    .steps { display: flex; flex-direction: column; }
     .step {
-      display: grid; grid-template-columns: 56px 1fr;
-      gap: 20px; align-items: flex-start;
-      padding: 20px 0; border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 20px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
     }
     .step:last-child { border-bottom: none; }
     .step-num {
-      font-family: var(--display); font-size: 28px; font-weight: 700;
-      color: var(--gold); text-align: center; line-height: 1;
-      padding-top: 2px;
+      font-family: var(--display);
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--gold);
+      text-align: center;
+      line-height: 1;
+      padding-top: 4px;
     }
     .step-title {
-      font-family: var(--display); font-size: 14px; letter-spacing: .05em;
-      color: var(--text); margin-bottom: 6px;
+      font-family: var(--display);
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 7px;
     }
-    .step-desc { font-size: 17px; color: var(--dim); line-height: 1.65; }
+    .step-body { font-size: 17px; color: var(--dim); line-height: 1.7; }
     .step-code {
-      font-family: var(--mono); font-size: 18px;
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--teal-l); padding: 8px 14px; margin-top: 10px;
       display: inline-block;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 19px;
+      background: var(--s2);
+      border: 1px solid var(--border);
+      color: var(--teal-l);
+      padding: 7px 14px;
     }
 
-    /* Estructura de archivos */
-    .file-tree {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 24px 28px; font-family: var(--mono); font-size: 20px;
-      line-height: 2.2; color: var(--dim);
+    /* ── TODO LIST ── */
+    .todo-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
-    .file-tree .dir  { color: var(--gold); }
-    .file-tree .file { color: var(--text); }
-    .file-tree .desc { color: var(--mute); font-size: 17px; }
+    .todo-col-title {
+      font-family: var(--display);
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .todo-col-title.done   { color: var(--green); }
+    .todo-col-title.next   { color: var(--gold); }
+    .todo-col-title.future { color: var(--purple); }
 
-    /* Ficha de ejemplo */
-    .example-sheet {
-      background: var(--surface);
+    .todo-list { display: flex; flex-direction: column; gap: 8px; }
+    .todo-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 10px 14px;
+      background: var(--s1);
+      border: 1px solid var(--border);
+      font-size: 17px;
+      line-height: 1.5;
+      transition: border-color .2s;
+    }
+    .todo-item:hover { border-color: var(--border-l); }
+    .todo-check {
+      font-size: 18px;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+    .todo-text  { color: var(--text); }
+    .todo-sub   { color: var(--dim); font-size: 15px; margin-top: 2px; }
+
+    .todo-item.done-item  { border-left: 3px solid var(--green); }
+    .todo-item.next-item  { border-left: 3px solid var(--gold); }
+    .todo-item.future-item{ border-left: 3px solid var(--purple); }
+
+    /* ── EJEMPLO DE OUTPUT ── */
+    .demo-sheet {
+      background: var(--s1);
       border: 1px solid var(--border);
       overflow: hidden;
     }
-    .ex-head {
+    .demo-head {
       background: linear-gradient(135deg, #1a0e0a, #0e1020);
       border-bottom: 2px solid var(--gold);
       padding: 20px 24px;
     }
-    .ex-archetype { font-family: var(--display); font-size: 10px; letter-spacing: .2em; color: var(--red-b); margin-bottom: 4px; }
-    .ex-name { font-family: var(--display); font-size: 26px; color: var(--gold-l); }
-    .ex-lema { font-style: italic; color: var(--dim); margin-top: 6px; }
-    .ex-body { display: grid; grid-template-columns: 1fr 1fr; }
-    .ex-section { padding: 18px 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .ex-section:nth-child(even) { border-right: none; }
-    .ex-section.full { grid-column: 1/-1; border-right: none; }
-    .ex-label { font-family: var(--display); font-size: 9px; letter-spacing: .2em; color: var(--mute); text-transform: uppercase; margin-bottom: 10px; }
-    .stat-demo { display: flex; flex-direction: column; gap: 7px; }
-    .stat-line { display: grid; grid-template-columns: 100px 1fr 32px; gap: 8px; align-items: center; }
-    .stat-n { font-family: var(--display); font-size: 10px; color: var(--dim); }
-    .stat-b { height: 6px; background: var(--surface2); border: 1px solid var(--border); position: relative; overflow: hidden; }
-    .stat-f { height: 100%; position: absolute; left: 0; top: 0; }
-    .stat-v { font-family: var(--mono); font-size: 18px; color: var(--text); text-align: right; }
-    .ex-prose { font-size: 16px; color: var(--dim); line-height: 1.6; }
-    .ex-quote { font-style: italic; color: var(--teal-l); padding: 10px 14px; background: var(--surface2); border-left: 2px solid var(--teal); font-size: 16px; }
+    .demo-archetype { font-family: var(--display); font-size: 9px; letter-spacing: .2em; color: var(--red-b); margin-bottom: 4px; text-transform: uppercase; }
+    .demo-name { font-family: var(--display); font-size: 26px; color: var(--gold-l); margin-bottom: 4px; }
+    .demo-lema { font-style: italic; color: var(--dim); font-size: 16px; }
+    .demo-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .demo-section { padding: 16px 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-section:nth-child(even) { border-right: none; }
+    .demo-section.full { grid-column: 1/-1; border-right: none; border-bottom: none; }
+    .demo-label { font-family: var(--display); font-size: 8px; letter-spacing: .2em; color: var(--mute); text-transform: uppercase; margin-bottom: 10px; }
+    .stat-row-d { display: grid; grid-template-columns: 110px 1fr 32px; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .stat-name-d { font-family: var(--display); font-size: 9px; color: var(--dim); }
+    .stat-track-d { height: 6px; background: var(--s2); border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .stat-fill-d { height: 100%; position: absolute; left: 0; top: 0; }
+    .stat-val-d { font-family: var(--mono); font-size: 18px; color: var(--text); text-align: right; }
+    .demo-prose { font-size: 16px; color: var(--dim); line-height: 1.65; }
+    .demo-block { padding: 10px 14px; background: var(--s2); border-left: 2px solid var(--teal); font-size: 16px; color: var(--dim); font-style: italic; }
 
-    /* Tarjetas de features */
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .feature {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 20px; transition: border-color .2s;
+    /* ── FOOTER ── */
+    .readme-footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid var(--border);
+      color: var(--mute);
+      font-size: 15px;
     }
-    .feature:hover { border-color: var(--gold); }
-    .feature-icon { font-size: 28px; margin-bottom: 10px; display: block; }
-    .feature-title {
-      font-family: var(--display); font-size: 12px; letter-spacing: .08em;
-      color: var(--gold); margin-bottom: 8px;
-    }
-    .feature-desc { font-size: 16px; color: var(--dim); line-height: 1.6; }
+    .readme-footer strong { color: var(--gold); font-family: var(--display); letter-spacing: .05em; }
 
-    @media(max-width:700px) {
-      .hero-title { font-size: 36px; }
-      .ex-body { grid-template-columns: 1fr; }
-      .ex-section { border-right: none; }
-      .features { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      .hero-title { font-size: 42px; }
+      .tech-grid  { grid-template-columns: 1fr 1fr; }
+      .todo-cols  { grid-template-columns: 1fr; }
+      .demo-body  { grid-template-columns: 1fr; }
+      .demo-section { border-right: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HERO -->
-  <div class="hero">
-    <p class="hero-label">✦ Documentación del proyecto ✦</p>
-    <h1 class="hero-title"><span class="npc">NPC</span><span class="forge">Forge</span></h1>
-    <p class="hero-sub">Convierte a las personas de tu vida en fichas de personaje de RPG con análisis psicológico generado por IA</p>
-    <div>
-      <span class="hero-badge">Gemini API</span>
-      <span class="hero-badge">Vanilla JS</span>
-      <span class="hero-badge">Sin dependencias</span>
-      <span class="hero-badge">localStorage</span>
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <span class="hero-ornament left">⚔</span>
+  <span class="hero-ornament right">⚔</span>
+  <p class="hero-eyebrow">✦ README VISUAL ✦</p>
+  <h1 class="hero-title"><span class="npc">NPC</span><span class="forge">Forge</span></h1>
+  <p class="hero-desc">Convierte a las personas de tu vida en fichas de personaje RPG con análisis psicológico generado por IA</p>
+  <div class="hero-badges">
+    <span class="badge badge-gold">Vanilla JS</span>
+    <span class="badge badge-teal">Gemini API</span>
+    <span class="badge badge-red">Sin frameworks</span>
+    <span class="badge badge-purple">Sin servidor</span>
+    <span class="badge badge-green">100% gratis</span>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="sticky-nav">
+  <a class="nav-link" href="#stack">Tech Stack</a>
+  <a class="nav-link" href="#archivos">Archivos</a>
+  <a class="nav-link" href="#uso">Cómo usar</a>
+  <a class="nav-link" href="#output">Output</a>
+  <a class="nav-link" href="#todo">To-Do</a>
+</nav>
+
+<!-- ══════════ CONTENIDO ══════════ -->
+<div class="wrap">
+
+  <!-- ── TECH STACK ── -->
+  <div class="section" id="stack">
+    <h2 class="section-heading"><span class="icon">🛠</span> Tech Stack</h2>
+    <div class="tech-grid">
+
+      <div class="tech-card color-gold">
+        <span class="tech-icon">🌐</span>
+        <p class="tech-name">HTML5 semántico</p>
+        <p class="tech-role">Estructura de la aplicación. Sin frameworks, sin templating. Solo etiquetas limpias con IDs funcionales.</p>
+        <p class="tech-label">index.html</p>
+      </div>
+
+      <div class="tech-card color-teal">
+        <span class="tech-icon">🎨</span>
+        <p class="tech-name">CSS Variables</p>
+        <p class="tech-role">Sistema de diseño completo con variables. Grid y Flexbox nativos. Sin Bootstrap, sin Tailwind.</p>
+        <p class="tech-label">base.css · layout.css · sheet.css</p>
+      </div>
+
+      <div class="tech-card color-red">
+        <span class="tech-icon">⚡</span>
+        <p class="tech-name">Vanilla JavaScript</p>
+        <p class="tech-role">ES2022 puro. Módulos IIFE para encapsulación. Sin jQuery, sin React, sin nada extra.</p>
+        <p class="tech-label">app.js · gemini.js · storage.js</p>
+      </div>
+
+      <div class="tech-card color-purple">
+        <span class="tech-icon">🤖</span>
+        <p class="tech-name">Google Gemini API</p>
+        <p class="tech-role">Modelo gemini-2.0-flash. Llamadas con fetch nativo. Prompt de ingeniería para output JSON estructurado.</p>
+        <p class="tech-label">generativelanguage.googleapis.com</p>
+      </div>
+
+      <div class="tech-card color-orange">
+        <span class="tech-icon">💾</span>
+        <p class="tech-name">localStorage</p>
+        <p class="tech-role">Persistencia de NPCs y API Key directamente en el navegador. Sin base de datos, sin backend.</p>
+        <p class="tech-label">storage.js</p>
+      </div>
+
+      <div class="tech-card color-teal">
+        <span class="tech-icon">🔤</span>
+        <p class="tech-name">Google Fonts</p>
+        <p class="tech-role">Cinzel (display/títulos) · Crimson Text (cuerpo) · VT323 (stats mono). Estética RPG medieval.</p>
+        <p class="tech-label">fonts.googleapis.com</p>
+      </div>
+
     </div>
   </div>
 
-  <div class="wrap">
+  <!-- ── ESTRUCTURA DE ARCHIVOS ── -->
+  <div class="section" id="archivos">
+    <h2 class="section-heading"><span class="icon">📁</span> Estructura de archivos</h2>
+    <div class="file-tree">
+<span class="ft-dir">npcforge/</span>
+<span class="ft-indent1"><span class="ft-file">index.html</span>      <span class="ft-desc">← HTML puro. Solo estructura, sin lógica ni estilos inline</span></span>
+<span class="ft-indent1"><span class="ft-file">README.html</span>     <span class="ft-desc">← Este archivo</span></span>
+<span class="ft-indent1">&nbsp;</span>
+<span class="ft-indent1"><span class="ft-dir">css/</span>               <span class="ft-comment">← Un archivo por responsabilidad</span></span>
+<span class="ft-indent2"><span class="ft-file">base.css</span>        <span class="ft-desc">← Variables CSS, reset, tipografía, toast</span></span>
+<span class="ft-indent2"><span class="ft-file">layout.css</span>      <span class="ft-desc">← Header, tabs, formulario, galería, botones, chips</span></span>
+<span class="ft-indent2"><span class="ft-file">sheet.css</span>       <span class="ft-desc">← Ficha RPG: stats, misiones, bloques narrativos</span></span>
+<span class="ft-indent1">&nbsp;</span>
+<span class="ft-indent1"><span class="ft-dir">js/</span>                <span class="ft-comment">← Cada módulo tiene una sola responsabilidad</span></span>
+<span class="ft-indent2"><span class="ft-file">storage.js</span>      <span class="ft-desc">← IIFE. Leer/guardar/borrar NPCs en localStorage</span></span>
+<span class="ft-indent2"><span class="ft-file">gemini.js</span>       <span class="ft-desc">← IIFE. Prompt RPG + llamada a la API de Google</span></span>
+<span class="ft-indent2"><span class="ft-file">app.js</span>          <span class="ft-desc">← Controlador principal. Eventos, estado, render HTML</span></span>
+    </div>
+  </div>
 
-    <!-- CÓMO USARLO -->
-    <div class="section">
-      <h2 class="section-title"><span>📖</span> Cómo usarlo</h2>
-      <div class="steps">
+  <!-- ── CÓMO USARLO ── -->
+  <div class="section" id="uso">
+    <h2 class="section-heading"><span class="icon">📖</span> Cómo usarlo</h2>
+    <div class="steps">
 
-        <div class="step">
-          <div class="step-num">1</div>
-          <div>
-            <p class="step-title">Consigue tu API Key de Gemini</p>
-            <p class="step-desc">
-              Ve a <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>,
-              inicia sesión con tu cuenta de Google y haz clic en <strong>Get API Key → Create API Key</strong>.
-              Es completamente gratis y no requiere tarjeta de crédito.
-            </p>
-            <code class="step-code">AIzaSy... (empieza siempre así)</code>
-          </div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <p class="step-title">Consigue tu API Key de Gemini</p>
+          <p class="step-body">
+            Ve a <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>,
+            inicia sesión con tu cuenta de Google y haz clic en
+            <strong>Get API Key → Create API Key</strong>.
+            Gratis, sin tarjeta de crédito. La key empieza siempre por <code>AIza…</code>
+          </p>
+          <code class="step-code">AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX</code>
         </div>
+      </div>
 
-        <div class="step">
-          <div class="step-num">2</div>
-          <div>
-            <p class="step-title">Abre index.html en el navegador</p>
-            <p class="step-desc">
-              No necesita servidor ni instalación. Doble clic en <strong>index.html</strong>
-              y funciona directamente. Pega tu API Key en el campo de la izquierda
-              — se guarda automáticamente en tu navegador.
-            </p>
-          </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <p class="step-title">Abre index.html en el navegador</p>
+          <p class="step-body">
+            Sin servidor, sin instalación, sin npm. Doble clic en <strong>index.html</strong>
+            y funciona. La API Key se guarda automáticamente en <code>localStorage</code>
+            para que no tengas que pegarla cada vez.
+          </p>
         </div>
+      </div>
 
-        <div class="step">
-          <div class="step-num">3</div>
-          <div>
-            <p class="step-title">Describe a una persona</p>
-            <p class="step-desc">
-              Pon su nombre, la relación que tienes con ella, su hobby, trabajo,
-              selecciona rasgos de personalidad y escribe una descripción libre.
-              <strong>Cuanto más detalle, mejor ficha generará la IA.</strong>
-            </p>
-          </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <p class="step-title">Describe a una persona de tu vida</p>
+          <p class="step-body">
+            Nombre, relación contigo, hobby, trabajo, rasgos de personalidad
+            y una descripción libre. <strong>Cuanto más detalle escribas, más
+            preciso y útil será el análisis.</strong> Puedes escribir desde
+            dos frases hasta varios párrafos.
+          </p>
         </div>
+      </div>
 
-        <div class="step">
-          <div class="step-num">4</div>
-          <div>
-            <p class="step-title">Genera y guarda la ficha</p>
-            <p class="step-desc">
-              Haz clic en <strong>⚔ Generar ficha</strong>. En 3-5 segundos tendrás
-              el análisis completo. Guárdalo en "Mi aldea" para acceder a él más tarde.
-              Los datos se guardan localmente en tu navegador.
-            </p>
-          </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <p class="step-title">Genera la ficha y guárdala en tu aldea</p>
+          <p class="step-body">
+            Haz clic en <strong>⚔ Generar ficha</strong>. En 3-5 segundos
+            aparecerá el análisis completo. Usa el botón <em>Guardar en la aldea</em>
+            para conservarlo. Los datos viven en tu navegador, nadie más los ve.
+          </p>
         </div>
+      </div>
 
+    </div>
+  </div>
+
+  <!-- ── EJEMPLO DE OUTPUT ── -->
+  <div class="section" id="output">
+    <h2 class="section-heading"><span class="icon">📋</span> Ejemplo de ficha generada</h2>
+    <div class="demo-sheet">
+      <div class="demo-head">
+        <p class="demo-archetype">✦ El Sabio Melancólico ✦</p>
+        <p class="demo-name">Carlos</p>
+        <p class="demo-lema">Saber demasiado es la forma más elegante de sufrir.</p>
+      </div>
+      <div class="demo-body">
+        <div class="demo-section">
+          <p class="demo-label">Atributos</p>
+          <div class="stat-row-d"><span class="stat-name-d">Carisma</span><div class="stat-track-d"><div class="stat-fill-d" style="width:72%;background:#c9a84c"></div></div><span class="stat-val-d">72</span></div>
+          <div class="stat-row-d"><span class="stat-name-d">Manipulación</span><div class="stat-track-d"><div class="stat-fill-d" style="width:38%;background:#e74c3c"></div></div><span class="stat-val-d">38</span></div>
+          <div class="stat-row-d"><span class="stat-name-d">Lealtad</span><div class="stat-track-d"><div class="stat-fill-d" style="width:85%;background:#4ecdc4"></div></div><span class="stat-val-d">85</span></div>
+          <div class="stat-row-d"><span class="stat-name-d">Ego</span><div class="stat-track-d"><div class="stat-fill-d" style="width:55%;background:#7c5cbf"></div></div><span class="stat-val-d">55</span></div>
+          <div class="stat-row-d"><span class="stat-name-d">Empatía</span><div class="stat-track-d"><div class="stat-fill-d" style="width:80%;background:#6ee7b7"></div></div><span class="stat-val-d">80</span></div>
+          <div class="stat-row-d"><span class="stat-name-d">Drama</span><div class="stat-track-d"><div class="stat-fill-d" style="width:42%;background:#fb923c"></div></div><span class="stat-val-d">42</span></div>
+        </div>
+        <div class="demo-section">
+          <p class="demo-label">🎭 Motivación oculta</p>
+          <p class="demo-prose">Necesita ser reconocido como el más inteligente del grupo, aunque lo disfrace de humildad intelectual. En el fondo, teme que su potencial nunca se materialice.</p>
+        </div>
+        <div class="demo-section">
+          <p class="demo-label">💀 Punto débil</p>
+          <p class="demo-prose">El éxito de sus contemporáneos le desestabiliza. Cuando alguien que considera igual le supera, se cierra en banda durante semanas.</p>
+        </div>
+        <div class="demo-section">
+          <p class="demo-label">⚠ Señal de alarma</p>
+          <p class="demo-prose">Tiende a reinterpretar el pasado para salir siempre bien parado. Si nota que pierdes terreno, te descarta sin decírtelo.</p>
+        </div>
+        <div class="demo-section full">
+          <p class="demo-label">🔑 Cómo ganar su confianza</p>
+          <p class="demo-block">Muéstrate interesado en sus ideas, no solo en sus conclusiones. Cita cosas que te dijo antes. Nunca compitas directamente con él — pídele consejo en algo que domina de verdad.</p>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- EJEMPLO DE FICHA -->
-    <div class="section">
-      <h2 class="section-title"><span>📋</span> Ejemplo de ficha generada</h2>
-      <div class="example-sheet">
-        <div class="ex-head">
-          <p class="ex-archetype">✦ El Sabio Melancólico ✦</p>
-          <p class="ex-name">Carlos</p>
-          <p class="ex-lema">Saber demasiado es la forma más elegante de sufrir.</p>
-        </div>
-        <div class="ex-body">
-          <div class="ex-section">
-            <p class="ex-label">Atributos</p>
-            <div class="stat-demo">
-              <div class="stat-line"><span class="stat-n">Carisma</span><div class="stat-b"><div class="stat-f" style="width:72%;background:#c9a84c"></div></div><span class="stat-v">72</span></div>
-              <div class="stat-line"><span class="stat-n">Manipulación</span><div class="stat-b"><div class="stat-f" style="width:38%;background:#e74c3c"></div></div><span class="stat-v">38</span></div>
-              <div class="stat-line"><span class="stat-n">Lealtad</span><div class="stat-b"><div class="stat-f" style="width:85%;background:#4ecdc4"></div></div><span class="stat-v">85</span></div>
-              <div class="stat-line"><span class="stat-n">Ego</span><div class="stat-b"><div class="stat-f" style="width:55%;background:#7c5cbf"></div></div><span class="stat-v">55</span></div>
-              <div class="stat-line"><span class="stat-n">Empatía</span><div class="stat-b"><div class="stat-f" style="width:80%;background:#6ee7b7"></div></div><span class="stat-v">80</span></div>
-              <div class="stat-line"><span class="stat-n">Drama</span><div class="stat-b"><div class="stat-f" style="width:42%;background:#fb923c"></div></div><span class="stat-v">42</span></div>
+  <!-- ── TODO LIST ── -->
+  <div class="section" id="todo">
+    <h2 class="section-heading"><span class="icon">📜</span> To-Do List</h2>
+    <div class="todo-cols">
+
+      <!-- HECHO -->
+      <div>
+        <p class="todo-col-title done">✅ Completado</p>
+        <div class="todo-list">
+          <div class="todo-item done-item">
+            <span class="todo-check">✅</span>
+            <div>
+              <p class="todo-text">Generador de ficha RPG con Gemini API</p>
+              <p class="todo-sub">6 stats, motivación, punto débil, confianza, alarma, misiones</p>
             </div>
           </div>
-          <div class="ex-section">
-            <p class="ex-label">Frase característica</p>
-            <p class="ex-quote">Al final todos acabamos siendo la versión mediocre de lo que soñamos ser.</p>
+          <div class="todo-item done-item">
+            <span class="todo-check">✅</span>
+            <div>
+              <p class="todo-text">Persistencia en localStorage</p>
+              <p class="todo-sub">Guardar, leer y borrar NPCs sin servidor</p>
+            </div>
           </div>
-          <div class="ex-section">
-            <p class="ex-label">🎭 Motivación oculta</p>
-            <p class="ex-prose">Necesita ser reconocido como el más inteligente del grupo, aunque lo disfrace de humildad intelectual. En el fondo, tiene miedo de que su potencial real nunca se materialice.</p>
+          <div class="todo-item done-item">
+            <span class="todo-check">✅</span>
+            <div>
+              <p class="todo-text">Galería "Mi aldea"</p>
+              <p class="todo-sub">Vista de tarjetas con acceso rápido a cada ficha</p>
+            </div>
           </div>
-          <div class="ex-section">
-            <p class="ex-label">💀 Punto débil</p>
-            <p class="ex-prose">El éxito visible de sus contemporáneos le desestabiliza completamente. Cuando alguien a quien considera igual le supera, se cierra en banda durante semanas.</p>
+          <div class="todo-item done-item">
+            <span class="todo-check">✅</span>
+            <div>
+              <p class="todo-text">Código modular en archivos separados</p>
+              <p class="todo-sub">HTML · CSS (×3) · JS (×3) con responsabilidad única</p>
+            </div>
           </div>
-          <div class="ex-section full">
-            <p class="ex-label">🔑 Cómo ganar su confianza</p>
-            <p class="ex-prose">Muéstrate genuinamente interesado en sus ideas, no solo en sus conclusiones. Cita cosas que te dijo en conversaciones anteriores. Nunca compitas con él directamente — si ganas, pierde el interés; si pierdes, te pierde el respeto. Pídele consejo sobre algo en lo que realmente sea bueno.</p>
+          <div class="todo-item done-item">
+            <span class="todo-check">✅</span>
+            <div>
+              <p class="todo-text">API Key guardada automáticamente</p>
+              <p class="todo-sub">No hay que pegarla cada vez que abres la app</p>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ESTRUCTURA DE ARCHIVOS -->
-    <div class="section">
-      <h2 class="section-title"><span>📁</span> Estructura del proyecto</h2>
-      <div class="file-tree">
-        <div><span class="dir">npcforge/</span></div>
-        <div>&nbsp;&nbsp;<span class="file">index.html</span>  <span class="desc">← HTML principal (solo estructura)</span></div>
-        <div>&nbsp;&nbsp;<span class="dir">css/</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">base.css</span>   <span class="desc">← Variables CSS, reset, tipografía</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">layout.css</span> <span class="desc">← Header, formulario, galería, botones</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">sheet.css</span>  <span class="desc">← Ficha RPG resultado</span></div>
-        <div>&nbsp;&nbsp;<span class="dir">js/</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">storage.js</span> <span class="desc">← Guardar/cargar NPCs en localStorage</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">gemini.js</span>  <span class="desc">← Llamadas a la API + prompt RPG</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">app.js</span>     <span class="desc">← Controlador principal, eventos, render</span></div>
-        <div>&nbsp;&nbsp;<span class="file">README.html</span> <span class="desc">← Esta página</span></div>
-      </div>
-    </div>
-
-    <!-- FEATURES -->
-    <div class="section">
-      <h2 class="section-title"><span>✦</span> Qué incluye</h2>
-      <div class="features">
-        <div class="feature">
-          <span class="feature-icon">🧠</span>
-          <p class="feature-title">Análisis psicológico</p>
-          <p class="feature-desc">6 estadísticas, motivación oculta, punto débil y señal de alarma generados por IA.</p>
-        </div>
-        <div class="feature">
-          <span class="feature-icon">🔑</span>
-          <p class="feature-title">Estrategia social</p>
-          <p class="feature-desc">Cómo ganar la confianza de cada persona de forma concreta y accionable.</p>
-        </div>
-        <div class="feature">
-          <span class="feature-icon">📜</span>
-          <p class="feature-title">Misiones de relación</p>
-          <p class="feature-desc">3 dinámicas inconscientes que propone el personaje y qué puedes ganar.</p>
-        </div>
-        <div class="feature">
-          <span class="feature-icon">🏘</span>
-          <p class="feature-title">Aldea persistente</p>
-          <p class="feature-desc">Guarda todos tus NPCs en el navegador y accede a sus fichas cuando quieras.</p>
-        </div>
-        <div class="feature">
-          <span class="feature-icon">📋</span>
-          <p class="feature-title">Exportar JSON</p>
-          <p class="feature-desc">Copia la ficha como JSON para usarla en tu juego RPG o procesarla con código.</p>
-        </div>
-        <div class="feature">
-          <span class="feature-icon">🆓</span>
-          <p class="feature-title">API 100% gratuita</p>
-          <p class="feature-desc">Usa Gemini 2.0 Flash de Google. Sin tarjeta, sin límites para uso personal.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRÓXIMOS PASOS -->
-    <div class="section">
-      <h2 class="section-title"><span>🗺</span> Próximos pasos posibles</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num" style="font-size:20px">🎮</div>
-          <div>
-            <p class="step-title">Juego tipo Animal Crossing</p>
-            <p class="step-desc">Los NPCs guardados pueden exportarse a un juego Phaser.js donde se mueven por un mapa tile-based y hablan usando sus fichas como contexto de diálogo.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num" style="font-size:20px">🔄</div>
-          <div>
-            <p class="step-title">Evolución de relación</p>
-            <p class="step-desc">Registrar interacciones con el personaje y que las estadísticas cambien con el tiempo según lo que haces.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num" style="font-size:20px">🗣</div>
-          <div>
-            <p class="step-title">Chat en personaje</p>
-            <p class="step-desc">Usar la ficha como system prompt para simular una conversación con el NPC y practicar cómo relacionarte con él/ella.</p>
+          <div class="todo-item done-item">
+            <span class="todo-check">✅</span>
+            <div>
+              <p class="todo-text">Exportar ficha como JSON</p>
+              <p class="todo-sub">Para reutilizarla en otros proyectos o scripts</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- PRÓXIMO + FUTURO -->
+      <div>
+        <p class="todo-col-title next">⚔ Próximos pasos</p>
+        <div class="todo-list" style="margin-bottom:20px">
+          <div class="todo-item next-item">
+            <span class="todo-check">🔲</span>
+            <div>
+              <p class="todo-text">Sprite pixel art por NPC</p>
+              <p class="todo-sub">Canvas 80×80. Elegir piel, pelo, ropa y expresión</p>
+            </div>
+          </div>
+          <div class="todo-item next-item">
+            <span class="todo-check">🔲</span>
+            <div>
+              <p class="todo-text">Chat en personaje</p>
+              <p class="todo-sub">Usar la ficha como system prompt para simular conversación con el NPC</p>
+            </div>
+          </div>
+          <div class="todo-item next-item">
+            <span class="todo-check">🔲</span>
+            <div>
+              <p class="todo-text">Editar ficha manualmente</p>
+              <p class="todo-sub">Ajustar stats o textos que la IA no clavó del todo</p>
+            </div>
+          </div>
+          <div class="todo-item next-item">
+            <span class="todo-check">🔲</span>
+            <div>
+              <p class="todo-text">Exportar ficha como imagen</p>
+              <p class="todo-sub">Captura del card para compartir — html2canvas</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="todo-col-title future">🗺 Visión a futuro</p>
+        <div class="todo-list">
+          <div class="todo-item future-item">
+            <span class="todo-check">💭</span>
+            <div>
+              <p class="todo-text">Juego tipo Animal Crossing</p>
+              <p class="todo-sub">Mapa tile-based con Phaser.js. Los NPCs guardados se mueven y hablan</p>
+            </div>
+          </div>
+          <div class="todo-item future-item">
+            <span class="todo-check">💭</span>
+            <div>
+              <p class="todo-text">Evolución de relación</p>
+              <p class="todo-sub">Registrar interacciones. Las stats cambian según lo que haces con la persona</p>
+            </div>
+          </div>
+          <div class="todo-item future-item">
+            <span class="todo-check">💭</span>
+            <div>
+              <p class="todo-text">Modo diario: misión del día</p>
+              <p class="todo-sub">La app propone una micro-misión social con uno de tus NPCs cada día</p>
+            </div>
+          </div>
+          <div class="todo-item future-item">
+            <span class="todo-check">💭</span>
+            <div>
+              <p class="todo-text">Comparar dos NPCs</p>
+              <p class="todo-sub">Análisis de compatibilidad y dinámicas entre dos personas de tu aldea</p>
+            </div>
+          </div>
+          <div class="todo-item future-item">
+            <span class="todo-check">💭</span>
+            <div>
+              <p class="todo-text">Backup / importar aldea</p>
+              <p class="todo-sub">Exportar toda la aldea como JSON para mover entre dispositivos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
+
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="readme-footer">
+  <strong>NPCForge</strong> · Proyecto personal · Vanilla JS + Gemini API<br>
+  Abre <code>index.html</code> para empezar · Sin instalación · Sin servidor
+</div>
 
 </body>
 </html>
