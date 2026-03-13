@@ -53,6 +53,12 @@ class WorldScene extends Phaser.Scene {
   create() {
     this.solidGroup = this.physics.add.staticGroup();
 
+    // Textura de 1px para colisionadores invisibles
+    const cg = this.add.graphics();
+    cg.fillStyle(0xffffff, 0).fillRect(0, 0, 1, 1);
+    cg.generateTexture('collider_px', 1, 1);
+    cg.destroy();
+
     this.bgGraphics = this.add.graphics().setDepth(0);
     this.fgGraphics = this.add.graphics().setDepth(6);
 
@@ -178,7 +184,7 @@ class WorldScene extends Phaser.Scene {
     g.fillStyle(0xffffff, 0.6) .fillCircle(fx - 3, fy - 3, 2);
 
     // Colisionador de la fuente
-    const fZone = this.physics.add.staticImage(fx, fy).setVisible(false);
+    const fZone = this.physics.add.staticSprite(fx, fy, 'collider_px').setVisible(false).setAlpha(0);
     fZone.setBodySize(20, 20);
     this.solidGroup.add(fZone);
   }
@@ -215,8 +221,9 @@ class WorldScene extends Phaser.Scene {
         fg.fillStyle(C.tree2).fillRect(px + 3, py + 10, 10, 2);
         fg.fillStyle(C.trunk).fillRect(px + 6, py + 12, 4, 4);
 
-        const z = this.physics.add.staticImage(px + TILE/2, py + TILE/2).setVisible(false);
+        const z = this.physics.add.staticSprite(px + TILE/2, py + TILE/2, 'collider_px').setVisible(false).setAlpha(0);
         z.setBodySize(TILE - 2, TILE - 2);
+        z.refreshBody();
         this.solidGroup.add(z);
       }
     }
@@ -333,8 +340,9 @@ class WorldScene extends Phaser.Scene {
     }
 
     // Colisionador de la casa
-    const z = this.physics.add.staticImage(wx, wy - 6).setVisible(false);
+    const z = this.physics.add.staticSprite(wx, wy - 6, 'collider_px').setVisible(false).setAlpha(0);
     z.setBodySize(W - 4, H - 4);
+    z.refreshBody();
     this.solidGroup.add(z);
   }
 
