@@ -498,6 +498,12 @@ class WorldScene extends Phaser.Scene {
     });
     this.nearbyNpc = closest;
     this.promptLabel.setVisible(!!closest);
-    if (closest) this.promptLabel.setPosition(closest.x, closest.y - 13);
+    if (closest) {
+      this.promptLabel.setPosition(closest.x, closest.y - 13);
+      const npc = closest.getData('npc');
+      if (npc) Missions.show(npc);
+    } else {
+      Missions.hide();
+    }
   }
 }

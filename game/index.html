@@ -33,6 +33,16 @@
     <div class="hud-hint">WASD / ↑←↓→ mover &nbsp;·&nbsp; E interactuar &nbsp;·&nbsp; ESC cerrar</div>
     <a href="../index.html" class="hud-back">← NPCForge</a>
 
+    <!-- ── Panel de misiones ── -->
+    <div id="missionsPanel" class="hidden">
+      <div class="missions-header">
+        <span class="missions-title">⚔ MISIONES</span>
+        <span class="missions-npc-label">con <b id="missionsNpcName"></b></span>
+        <span class="missions-counter" id="missionsCounter">0/3</span>
+      </div>
+      <div id="missionsList" class="missions-list"></div>
+    </div>
+
     <div id="dialogOverlay" class="hidden">
       <div class="dialog-box">
         <div class="dialog-head">
@@ -54,6 +64,7 @@
   </div>
 
   <script src="../js/storage.js"></script>
+  <script src="js/missions.js"></script>
   <script src="../js/sprite-editor.js"></script>
 
   <script>
