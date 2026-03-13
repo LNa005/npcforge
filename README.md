@@ -1,4 +1,3 @@
-```markdown
 <div align="center">
 
 # 🌸 NPCForge ✨
@@ -53,8 +52,6 @@ npcforge/
     ├── storage.js       # Interfaz de persistencia (localStorage)
     ├── gemini.js        # Inyección de prompt estructurado y fetch a la API
     └── app.js           # Controlador: Listeners, DOM render y state management
-
-```
 
 </details>
 
