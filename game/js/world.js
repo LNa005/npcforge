@@ -5,7 +5,7 @@
 const TILE  = 16;
 const MAP   = 40;
 const SPEED = 70;
-const REACH = 22;   // distancia de interacción en px
+const REACH = 22;
 
 class WorldScene extends Phaser.Scene {
 
@@ -20,27 +20,42 @@ class WorldScene extends Phaser.Scene {
     this.wasd       = null;
     this.eKey       = null;
     this.nearbyNpc  = null;
-    this.prompt     = null;   // "[E] Hablar" label
+    this.prompt     = null;
   }
 
-  /* ── Preload: cargar sprites base64 ── */
+  /* ── Preload: solo cargar lo que NO es base64 ── */
   preload() {
     this.npcsData = Storage.getAll();
+    // Los sprites base64 se añaden en create() via _addBase64Texture
+    // para evitar problemas del loader con data URLs
+  }
 
-    const playerData = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
-    if (playerData?.spriteData) {
-      this.load.image('player_spr', playerData.spriteData);
-    }
-
-    this.npcsData.forEach(npc => {
-      if (npc.spriteData) {
-        this.load.image(`npc_${npc.id}`, npc.spriteData);
-      }
+  /* ── Helper: registrar textura desde base64 sin el loader ── */
+  _addBase64Texture(key, dataUrl) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        this.textures.addImage(key, img);
+        resolve();
+      };
+      img.onerror = () => resolve(); // falla silenciosa, se usará fallback
+      img.src = dataUrl;
     });
   }
 
   /* ── Create ── */
-  create() {
+  async create() {
+    // Cargar sprites base64 antes de construir el mundo
+    const playerData = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
+    if (playerData?.spriteData) {
+      await this._addBase64Texture('player_spr', playerData.spriteData);
+    }
+    for (const npc of this.npcsData) {
+      if (npc.spriteData) {
+        await this._addBase64Texture(`npc_${npc.id}`, npc.spriteData);
+      }
+    }
+
     this._makeTextures();
     this._buildMap();
     this._drawBackground();
@@ -73,7 +88,6 @@ class WorldScene extends Phaser.Scene {
       U ? -SPEED : D ? SPEED : 0
     );
 
-    // Diagonal normalization
     if ((L || R) && (U || D)) {
       this.player.body.velocity.normalize().scale(SPEED);
     }
@@ -117,7 +131,7 @@ class WorldScene extends Phaser.Scene {
     t.generateTexture('tree', 16, 16);
     t.destroy();
 
-    // Jugador por defecto (si no hay sprite guardado)
+    // Jugador fallback (si el base64 no cargó)
     if (!this.textures.exists('player_spr')) {
       const pf = this.add.graphics();
       pf.fillStyle(0xc9a84c); pf.fillRect(4, 0, 8, 8);
@@ -126,12 +140,14 @@ class WorldScene extends Phaser.Scene {
       pf.destroy();
     }
 
-    // NPC por defecto
-    const nf = this.add.graphics();
-    nf.fillStyle(0xe8d0a0); nf.fillRect(4, 0, 8, 8);
-    nf.fillStyle(0xaa3322); nf.fillRect(3, 8, 10, 8);
-    nf.generateTexture('npc_default', 16, 16);
-    nf.destroy();
+    // NPC fallback
+    if (!this.textures.exists('npc_default')) {
+      const nf = this.add.graphics();
+      nf.fillStyle(0xe8d0a0); nf.fillRect(4, 0, 8, 8);
+      nf.fillStyle(0xaa3322); nf.fillRect(3, 8, 10, 8);
+      nf.generateTexture('npc_default', 16, 16);
+      nf.destroy();
+    }
   }
 
   /* ── Mapa procedural ── */
@@ -210,7 +226,6 @@ class WorldScene extends Phaser.Scene {
       s.setImmovable(true).setDepth(11).setData('npc', npc);
       this.physics.add.collider(this.player, s);
 
-      // Nombre encima del NPC
       this.add.text(wx, wy - 11, npc.form.nombre || '?', {
         fontSize: '5px',
         fontFamily: 'monospace',
@@ -244,10 +259,8 @@ class WorldScene extends Phaser.Scene {
     this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     this.eKey.on('down', () => {
       if (this.nearbyNpc && !Dialog.isOpen()) {
-        // Pausar input de Phaser para que el campo de texto funcione
         this.input.keyboard.enabled = false;
         this.player.setVelocity(0, 0);
-
         Dialog.open(this.nearbyNpc.getData('npc'), () => {
           this.input.keyboard.enabled = true;
         });
