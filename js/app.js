@@ -80,12 +80,12 @@ function setupApiKeyField() {
   field.addEventListener('input', () => {
     const key = field.value.trim();
     if (!key) { status.textContent = ''; status.className = 'key-status'; return; }
-    if (key.startsWith('AIza') && key.length > 20) {
+    if (key.length > 20) {
       status.textContent = '✓ Formato correcto';
       status.className   = 'key-status ok';
       Storage.saveApiKey(key);
     } else {
-      status.textContent = 'Debe empezar por AIza…';
+      status.textContent = 'La key parece demasiado corta';
       status.className   = 'key-status error';
     }
   });

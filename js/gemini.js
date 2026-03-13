@@ -1,18 +1,17 @@
 /* ================================================
-   gemini.js — Llamadas a Google Gemini API
+   mistral.js — Llamadas a Mistral API
    ================================================ */
 
 const Gemini = (() => {
 
-  const MODEL    = 'gemini-2.0-flash';
-  const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+  const MODEL    = 'mistral-small-latest';
+  const ENDPOINT = 'https://api.mistral.ai/v1/chat/completions';
 
   function buildPrompt(form) {
-    return `
-Eres un experto en psicología social, arquetipos narrativos y diseño de personajes de rol (RPG).
+    return `Eres un experto en psicología social, arquetipos narrativos y diseño de personajes de rol (RPG).
 Analiza a esta persona real y devuelve una FICHA DE PERSONAJE estilo RPG.
 
-IMPORTANTE: Responde ÚNICAMENTE con un JSON válido. Sin markdown, sin texto antes ni después.
+Responde ÚNICAMENTE con un JSON válido. Sin markdown, sin texto antes ni después.
 
 DATOS DE LA PERSONA:
 - Nombre: ${form.nombre || 'Sin nombre'}
@@ -25,8 +24,8 @@ DATOS DE LA PERSONA:
 GENERA este objeto JSON completo:
 
 {
-  "arquetipo": "Nombre del arquetipo RPG en 2-4 palabras (ej: El Sabio Melancólico, La Manipuladora Benévola, El Héroe sin Causa)",
-  "lema": "Frase de máximo 10 palabras que resume su filosofía de vida. Que suene poética.",
+  "arquetipo": "Nombre del arquetipo RPG en 2-4 palabras (ej: El Sabio Melancólico, La Manipuladora Benévola)",
+  "lema": "Frase de máximo 10 palabras que resume su filosofía de vida.",
   "stats": {
     "carisma":      0,
     "manipulacion": 0,
@@ -47,49 +46,52 @@ GENERA este objeto JSON completo:
   ]
 }
 
-Reemplaza los valores de ejemplo con el análisis real. Los stats son números del 0 al 100.
-`.trim();
+Los stats son números enteros del 0 al 100.`.trim();
   }
 
   async function generateSheet(form, apiKey) {
     if (!apiKey || apiKey.trim().length < 10) {
-      throw new Error('API Key inválida. Consíguela gratis en aistudio.google.com');
+      throw new Error('API Key inválida. Consíguela gratis en console.mistral.ai');
     }
 
-    const url  = `${ENDPOINT}?key=${apiKey.trim()}`;
-    const body = {
-      contents: [{ parts: [{ text: buildPrompt(form) }] }],
-      generationConfig: {
-        temperature:     0.85,
-        maxOutputTokens: 1200
-      }
-    };
-
-    const res = await fetch(url, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(body)
-    });
+    let res;
+    try {
+      res = await fetch(ENDPOINT, {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': `Bearer ${apiKey.trim()}`
+        },
+        body: JSON.stringify({
+          model:           MODEL,
+          messages:        [{ role: 'user', content: buildPrompt(form) }],
+          response_format: { type: 'json_object' },
+          temperature:     0.85,
+          max_tokens:      1200
+        })
+      });
+    } catch (e) {
+      throw new Error('Error de red. Comprueba tu conexión.');
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      const msg = err?.error?.message || `Error ${res.status}`;
-      throw new Error(msg);
+      if (res.status === 401) throw new Error('API Key incorrecta o sin permisos.');
+      if (res.status === 429) throw new Error('Límite de peticiones alcanzado. Espera un momento.');
+      throw new Error(err?.message || `Error HTTP ${res.status}`);
     }
 
     const data = await res.json();
-    const raw  = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const raw  = data?.choices?.[0]?.message?.content;
 
-    if (!raw) throw new Error('Respuesta vacía de la API');
-
-    // Extraer el primer bloque {...} aunque Gemini envuelva en markdown o añada texto extra
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('La IA no devolvió JSON. Inténtalo de nuevo.');
+    if (!raw) throw new Error('Respuesta vacía de la API.');
 
     try {
-      return JSON.parse(match[0]);
+      return JSON.parse(raw);
     } catch {
-      throw new Error('La IA devolvió un formato inesperado. Inténtalo de nuevo.');
+      const match = raw.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('La IA no devolvió JSON. Inténtalo de nuevo.');
+      return JSON.parse(match[0]);
     }
   }
 
