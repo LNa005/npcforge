@@ -153,4 +153,6 @@ npcforge/
 
 *Hecho con demasiado amor, mangoloco y ganas 💜*
 
+por ahora nada más, se continua después de una peli o algo así
+
 </div>
