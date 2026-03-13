@@ -116,6 +116,11 @@ class WorldScene extends Phaser.Scene {
       } else {
         n.sprite.setVelocity(0, 0);
       }
+
+      // Etiqueta sigue al sprite
+      if (n.nameLabel) {
+        n.nameLabel.setPosition(n.sprite.x, n.sprite.y - 12);
+      }
     });
 
     this._checkProximity();
@@ -431,13 +436,20 @@ class WorldScene extends Phaser.Scene {
       sprite.setDepth(11).setData('npc', npc);
       this.physics.add.collider(sprite, this.solidGroup);
 
+      const nameLabel = this.add.text(wx, wy - 12, npc.form.nombre || '?', {
+        fontSize: '5px', fontFamily: 'monospace',
+        color: '#e8dfc8', backgroundColor: '#0d0c0eb0',
+        padding: { x: 2, y: 1 }
+      }).setOrigin(0.5, 1).setDepth(26);
+
       this.npcSprites.push({
         sprite,
+        nameLabel,
         homeX:   wx,
         homeY:   wy,
         targetX: wx,
         targetY: wy,
-        timer:   Math.random() * 2000, // desfase inicial
+        timer:   Math.random() * 2000,
       });
     });
   }
