@@ -6,7 +6,7 @@ const Dialog = (() => {
 
   const ENDPOINT  = 'https://api.mistral.ai/v1/chat/completions';
   const MODEL     = 'mistral-small-latest';
-  const histories = {};   // npc.id → [{ role, content }, ...]
+  const histories = {};
 
   let _open    = false;
   let _npcId   = null;
@@ -14,7 +14,6 @@ const Dialog = (() => {
 
   function isOpen() { return _open; }
 
-  /* ── Sistema prompt: convierte la ficha en personalidad ── */
   function buildSystem(npc) {
     const s = npc.sheet;
     return `Eres ${npc.form.nombre || 'un personaje'}, un ${s.arquetipo}.
@@ -39,7 +38,7 @@ Respuestas cortas (máximo 2-3 frases). No menciones que eres una IA ni que tien
 
     const spriteEl = document.getElementById('dialogNpcSprite');
     if (npc.spriteData) {
-      spriteEl.src   = npc.spriteData;
+      spriteEl.src = npc.spriteData;
       spriteEl.style.display = 'block';
     } else {
       spriteEl.style.display = 'none';
@@ -49,20 +48,20 @@ Respuestas cortas (máximo 2-3 frases). No menciones que eres una IA ni que tien
     histEl.innerHTML = '';
 
     if (!histories[_npcId]) {
-      // Primera vez: saludo con la frase típica (sin gastar API)
       histories[_npcId] = [];
       const greeting = npc.sheet.dialogo_tipico || '…';
       _appendMsg(npc.form.nombre || 'NPC', greeting, 'npc');
       histories[_npcId].push({ role: 'assistant', content: greeting });
     } else {
-      // Visita anterior: restaurar historial
       histories[_npcId].forEach(m => {
         const sender = m.role === 'user' ? 'Tú' : (npc.form.nombre || 'NPC');
         _appendMsg(sender, m.content, m.role === 'user' ? 'user' : 'npc');
       });
     }
 
-    setTimeout(() => document.getElementById('dialogInput')?.focus(), 80);
+    // Foco al input + capturar teclas para que no lleguen a Phaser
+    const input = document.getElementById('dialogInput');
+    setTimeout(() => input?.focus(), 80);
   }
 
   /* ── Cerrar diálogo ── */
@@ -80,6 +79,7 @@ Respuestas cortas (máximo 2-3 frases). No menciones que eres una IA ni que tien
     const text    = (inputEl?.value || '').trim();
     if (!text || !_open) return;
     inputEl.value = '';
+    inputEl.focus();
 
     const npc = Storage.getById(_npcId);
     if (!npc) return;
@@ -127,7 +127,6 @@ Respuestas cortas (máximo 2-3 frases). No menciones que eres una IA ni que tien
     }
   }
 
-  /* ── UI helper ── */
   function _appendMsg(sender, text, cls) {
     const h   = document.getElementById('dialogHistory');
     const div = document.createElement('div');
@@ -138,10 +137,22 @@ Respuestas cortas (máximo 2-3 frases). No menciones que eres una IA ni que tien
     return div;
   }
 
-  /* Escape para cerrar */
+  /* ── Capturar teclas cuando el diálogo está abierto ── */
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && _open) { e.preventDefault(); close(); }
-  });
+    if (!_open) return;
+
+    // Escape cierra
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+
+    // Todas las demás teclas: detener propagación para que Phaser no las capture
+    e.stopPropagation();
+
+    // Redirigir el foco al input si se escribe algo
+    const input = document.getElementById('dialogInput');
+    if (input && document.activeElement !== input) {
+      input.focus();
+    }
+  }, true); // useCapture: true → intercepta antes que Phaser
 
   return { open, close, send, isOpen };
 
