@@ -33,7 +33,6 @@
     <div class="hud-hint">WASD / ↑←↓→ mover &nbsp;·&nbsp; E interactuar &nbsp;·&nbsp; ESC cerrar</div>
     <a href="../index.html" class="hud-back">← NPCForge</a>
 
-    <!-- Overlay diálogo -->
     <div id="dialogOverlay" class="hidden">
       <div class="dialog-box">
         <div class="dialog-head">
@@ -56,17 +55,15 @@
 
   <script src="../js/storage.js"></script>
   <script src="../js/sprite-editor.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
-  <script src="js/dialog.js"></script>
-  <script src="js/world.js"></script>
 
   <script>
-    /* ── Carga imágenes base64 antes de iniciar Phaser ── */
+    window.preloadedImages = {};
+
     function loadImage(key, dataUrl) {
       return new Promise(resolve => {
         const img = new Image();
-        img.onload  = () => { preloadedImages[key] = img; resolve(); };
-        img.onerror = () => resolve(); // fallback silencioso
+        img.onload  = () => { window.preloadedImages[key] = img; resolve(); };
+        img.onerror = () => resolve();
         img.src = dataUrl;
       });
     }
@@ -75,33 +72,45 @@
       document.getElementById('playerCreation').classList.add('hidden');
       document.getElementById('gameContainer').classList.remove('hidden');
 
-      // Precargar sprite del jugador
       const playerData = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
       if (playerData?.spriteData) {
         await loadImage('player_spr', playerData.spriteData);
       }
 
-      // Precargar sprites de NPCs
       const npcs = Storage.getAll();
       await Promise.all(
-        npcs.filter(n => n.spriteData)
-            .map(n => loadImage(`npc_${n.id}`, n.spriteData))
+        npcs.filter(n => n.spriteData).map(n => loadImage(`npc_${n.id}`, n.spriteData))
       );
 
-      // Ahora sí, lanzar Phaser con todos los sprites listos
-      new Phaser.Game({
-        type:            Phaser.AUTO,
-        width:           640,
-        height:          480,
-        pixelArt:        true,
-        backgroundColor: '#0a0910',
-        parent:          'gameCanvas',
-        physics: {
-          default: 'arcade',
-          arcade:  { debug: false }
-        },
-        scene: [WorldScene]
-      });
+      const phaserScript = document.createElement('script');
+      phaserScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js';
+      phaserScript.onload = () => {
+        const dialogScript = document.createElement('script');
+        dialogScript.src = 'js/dialog.js';
+        dialogScript.onload = () => {
+          const worldScript = document.createElement('script');
+          worldScript.src = 'js/world.js';
+          worldScript.onload = () => {
+            new Phaser.Game({
+              type:   Phaser.CANVAS,
+              width:  window.innerWidth,
+              height: window.innerHeight,
+              pixelArt: true,
+              backgroundColor: '#1a1830',
+              parent: 'gameCanvas',
+              scale: {
+                mode:            Phaser.Scale.RESIZE,
+                autoCenter:      Phaser.Scale.CENTER_BOTH,
+              },
+              physics: { default: 'arcade', arcade: { debug: false } },
+              scene:   [WorldScene]
+            });
+          };
+          document.body.appendChild(worldScript);
+        };
+        document.body.appendChild(dialogScript);
+      };
+      document.body.appendChild(phaserScript);
     }
 
     async function confirmPlayer() {
@@ -111,7 +120,6 @@
       await _launchGame();
     }
 
-    // Al entrar: ¿ya tiene personaje?
     const savedPlayer = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
     if (savedPlayer?.spriteData) {
       _launchGame();

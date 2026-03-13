@@ -7,8 +7,7 @@ const MAP   = 40;
 const SPEED = 70;
 const REACH = 22;
 
-// Los Image elements precargados desde game/index.html antes de lanzar Phaser
-const preloadedImages = {};
+const preloadedImages = window.preloadedImages || {};
 
 class WorldScene extends Phaser.Scene {
 
@@ -28,26 +27,23 @@ class WorldScene extends Phaser.Scene {
 
   preload() {
     this.npcsData = Storage.getAll();
-  }
-
-  create() {
-    // Registrar sprites precargados en Phaser sincrónicamente
     Object.entries(preloadedImages).forEach(([key, img]) => {
       if (!this.textures.exists(key)) {
         this.textures.addImage(key, img);
       }
     });
+  }
 
-    this._makeTextures();
+  create() {
     this._buildMap();
-    this._drawBackground();
-    this._placeTrees();
+    this._drawBackground();   // un solo Graphics para todo el suelo
+    this._drawTrees();        // un solo Graphics para todos los árboles
+    this._placeTreeColliders();
     this._spawnPlayer();
     this._spawnNpcs();
     this._setupCamera();
     this._setupInput();
     this._makePromptLabel();
-
     if (this.npcsData.length === 0) this._emptyHint();
   }
 
@@ -66,7 +62,6 @@ class WorldScene extends Phaser.Scene {
       L ? -SPEED : R ? SPEED : 0,
       U ? -SPEED : D ? SPEED : 0
     );
-
     if ((L || R) && (U || D)) {
       this.player.body.velocity.normalize().scale(SPEED);
     }
@@ -74,53 +69,7 @@ class WorldScene extends Phaser.Scene {
     this._checkProximity();
   }
 
-  _makeTextures() {
-    [
-      [0x4a7c3f, 0x3d6b34],
-      [0x4f8442, 0x426e37],
-      [0x527a3c, 0x446831],
-      [0x486030, 0x3c5228],
-    ].forEach(([main, dark], i) => {
-      const g = this.add.graphics();
-      g.fillStyle(main); g.fillRect(0, 0, 16, 16);
-      g.fillStyle(dark);
-      g.fillRect(0, 0, 2, 2); g.fillRect(13, 7, 2, 2); g.fillRect(5, 12, 2, 2);
-      g.generateTexture(`grass${i}`, 16, 16);
-      g.destroy();
-    });
-
-    const p = this.add.graphics();
-    p.fillStyle(0x8b7355); p.fillRect(0, 0, 16, 16);
-    p.fillStyle(0x9a8265); p.fillRect(2, 4, 3, 2); p.fillRect(9, 10, 3, 2);
-    p.fillStyle(0x7a6345); p.fillRect(0, 0, 16, 1); p.fillRect(0, 15, 16, 1);
-    p.generateTexture('path', 16, 16);
-    p.destroy();
-
-    const t = this.add.graphics();
-    t.fillStyle(0x2a4a18); t.fillRect(1, 3, 14, 9);
-    t.fillStyle(0x3a6a22); t.fillRect(3, 1, 10, 5);
-    t.fillStyle(0x1e3a10); t.fillRect(3, 10, 10, 2);
-    t.fillStyle(0x5c3a1e); t.fillRect(6, 12, 4, 4);
-    t.generateTexture('tree', 16, 16);
-    t.destroy();
-
-    if (!this.textures.exists('player_spr')) {
-      const pf = this.add.graphics();
-      pf.fillStyle(0xc9a84c); pf.fillRect(4, 0, 8, 8);
-      pf.fillStyle(0x3355cc); pf.fillRect(3, 8, 10, 8);
-      pf.generateTexture('player_spr', 16, 16);
-      pf.destroy();
-    }
-
-    if (!this.textures.exists('npc_default')) {
-      const nf = this.add.graphics();
-      nf.fillStyle(0xe8d0a0); nf.fillRect(4, 0, 8, 8);
-      nf.fillStyle(0xaa3322); nf.fillRect(3, 8, 10, 8);
-      nf.generateTexture('npc_default', 16, 16);
-      nf.destroy();
-    }
-  }
-
+  /* ── Mapa procedural ── */
   _buildMap() {
     const C = MAP / 2;
     for (let y = 0; y < MAP; y++) {
@@ -128,42 +77,91 @@ class WorldScene extends Phaser.Scene {
       for (let x = 0; x < MAP; x++) {
         const dx = Math.abs(x - C);
         const dy = Math.abs(y - C);
-        if (x === C || y === C)          this.mapGrid[y][x] = 'path';
-        else if (dx < 7 && dy < 7)       this.mapGrid[y][x] = 'grass';
+        if (x === C || y === C)        this.mapGrid[y][x] = 'path';
+        else if (dx < 7 && dy < 7)     this.mapGrid[y][x] = 'grass';
         else this.mapGrid[y][x] = Math.random() < 0.22 ? 'tree' : 'grass';
       }
     }
   }
 
+  /* ── Un único Graphics para todo el suelo ── */
   _drawBackground() {
-    const rt = this.add.renderTexture(0, 0, MAP * TILE, MAP * TILE);
-    for (let y = 0; y < MAP; y++) {
-      for (let x = 0; x < MAP; x++) {
-        const key = this.mapGrid[y][x] === 'path' ? 'path' : `grass${(x * 3 + y * 7) % 4}`;
-        rt.draw(key, x * TILE, y * TILE);
-      }
-    }
-  }
+    const g = this.add.graphics().setDepth(0);
+    const grassColors = [0x4a7c3f, 0x4f8442, 0x527a3c, 0x486030];
+    const darkColors  = [0x3d6b34, 0x426e37, 0x446831, 0x3c5228];
 
-  _placeTrees() {
-    this.trees = this.physics.add.staticGroup();
     for (let y = 0; y < MAP; y++) {
       for (let x = 0; x < MAP; x++) {
-        if (this.mapGrid[y][x] === 'tree') {
-          this.trees.create(x * TILE + TILE / 2, y * TILE + TILE / 2, 'tree');
+        const px = x * TILE;
+        const py = y * TILE;
+
+        if (this.mapGrid[y][x] === 'path') {
+          g.fillStyle(0x8b7355).fillRect(px, py, TILE, TILE);
+          g.fillStyle(0x9a8265)
+           .fillRect(px + 2, py + 4, 3, 2)
+           .fillRect(px + 9, py + 10, 3, 2);
+        } else {
+          const v = (x * 3 + y * 7) % 4;
+          g.fillStyle(grassColors[v]).fillRect(px, py, TILE, TILE);
+          g.fillStyle(darkColors[v])
+           .fillRect(px, py, 2, 2)
+           .fillRect(px + 13, py + 7, 2, 2);
         }
       }
     }
   }
 
+  /* ── Un único Graphics para todos los árboles ── */
+  _drawTrees() {
+    const g = this.add.graphics().setDepth(5);
+    for (let y = 0; y < MAP; y++) {
+      for (let x = 0; x < MAP; x++) {
+        if (this.mapGrid[y][x] !== 'tree') continue;
+        const px = x * TILE;
+        const py = y * TILE;
+        g.fillStyle(0x2a4a18).fillRect(px + 1, py + 3, 14,  9);
+        g.fillStyle(0x3a6a22).fillRect(px + 3, py + 1, 10,  5);
+        g.fillStyle(0x1e3a10).fillRect(px + 3, py + 10, 10, 2);
+        g.fillStyle(0x5c3a1e).fillRect(px + 6, py + 12, 4,  4);
+      }
+    }
+  }
+
+  /* ── Colisionadores invisibles para los árboles ── */
+  _placeTreeColliders() {
+    this.trees = this.physics.add.staticGroup();
+    for (let y = 0; y < MAP; y++) {
+      for (let x = 0; x < MAP; x++) {
+        if (this.mapGrid[y][x] !== 'tree') continue;
+        const zone = this.physics.add
+          .staticImage(x * TILE + TILE / 2, y * TILE + TILE / 2)
+          .setVisible(false);
+        zone.setBodySize(TILE - 2, TILE - 2);
+        this.trees.add(zone);
+      }
+    }
+  }
+
+  /* ── Jugador ── */
   _spawnPlayer() {
-    const cx = (MAP / 2) * TILE;
-    this.player = this.physics.add.sprite(cx, cx, 'player_spr');
+    const cx = (MAP / 2) * TILE + TILE / 2;
+
+    if (this.textures.exists('player_spr')) {
+      this.player = this.physics.add.sprite(cx, cx, 'player_spr');
+    } else {
+      const g = this.add.graphics();
+      g.fillStyle(0xc9a84c).fillRect(0, 0, TILE, TILE);
+      g.generateTexture('player_fb', TILE, TILE);
+      g.destroy();
+      this.player = this.physics.add.sprite(cx, cx, 'player_fb');
+    }
+
     this.player.setCollideWorldBounds(true).setDepth(12);
     this.physics.world.setBounds(0, 0, MAP * TILE, MAP * TILE);
     this.physics.add.collider(this.player, this.trees);
   }
 
+  /* ── NPCs ── */
   _spawnNpcs() {
     const C = MAP / 2;
     const offsets = [
@@ -176,11 +174,22 @@ class WorldScene extends Phaser.Scene {
       const [ox, oy] = offsets[i % offsets.length];
       const wx = (C + ox) * TILE + TILE / 2;
       const wy = (C + oy) * TILE + TILE / 2;
-      const key = this.textures.exists(`npc_${npc.id}`) ? `npc_${npc.id}` : 'npc_default';
+      const key = `npc_${npc.id}`;
 
-      const s = this.physics.add.sprite(wx, wy, key);
-      s.setImmovable(true).setDepth(11).setData('npc', npc);
-      this.physics.add.collider(this.player, s);
+      let sprite;
+      if (this.textures.exists(key)) {
+        sprite = this.physics.add.sprite(wx, wy, key);
+      } else {
+        const g = this.add.graphics();
+        g.fillStyle(0xe8d0a0).fillRect(0, 0, TILE, TILE);
+        const fbKey = `npc_fb_${i}`;
+        g.generateTexture(fbKey, TILE, TILE);
+        g.destroy();
+        sprite = this.physics.add.sprite(wx, wy, fbKey);
+      }
+
+      sprite.setImmovable(true).setDepth(11).setData('npc', npc);
+      this.physics.add.collider(this.player, sprite);
 
       this.add.text(wx, wy - 11, npc.form.nombre || '?', {
         fontSize: '5px', fontFamily: 'monospace',
@@ -188,10 +197,11 @@ class WorldScene extends Phaser.Scene {
         padding: { x: 2, y: 1 }
       }).setOrigin(0.5, 1).setDepth(25);
 
-      this.npcSprites.push(s);
+      this.npcSprites.push(sprite);
     });
   }
 
+  /* ── Cámara ── */
   _setupCamera() {
     this.cameras.main
       .setZoom(2)
@@ -199,6 +209,7 @@ class WorldScene extends Phaser.Scene {
       .startFollow(this.player, true, 0.1, 0.1);
   }
 
+  /* ── Input ── */
   _setupInput() {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.wasd = {
@@ -229,8 +240,8 @@ class WorldScene extends Phaser.Scene {
   }
 
   _emptyHint() {
-    const cx = (MAP / 2) * TILE;
-    this.add.text(cx, cx + 20,
+    const cx = (MAP / 2) * TILE + TILE / 2;
+    this.add.text(cx, cx + 24,
       'Crea personajes en NPCForge\npara poblar la aldea',
       {
         fontSize: '6px', fontFamily: 'monospace',
@@ -243,12 +254,10 @@ class WorldScene extends Phaser.Scene {
   _checkProximity() {
     let closest = null;
     let minDist = Infinity;
-
     this.npcSprites.forEach(s => {
       const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, s.x, s.y);
       if (d < REACH && d < minDist) { minDist = d; closest = s; }
     });
-
     this.nearbyNpc = closest;
     this.prompt.setVisible(!!closest);
     if (closest) this.prompt.setPosition(closest.x, closest.y - 11);
