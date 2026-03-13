@@ -52,6 +52,16 @@ Reemplaza los valores de ejemplo con el análisis real. Los stats son números d
   }
 
   async function generateSheet(form, apiKey) {
+    // Los navegadores bloquean fetch a APIs externas desde file://
+    // Necesita servirse desde HTTP/HTTPS (GitHub Pages, Live Server, etc.)
+    if (window.location.protocol === 'file:') {
+      throw new Error(
+        'Abre el proyecto desde un servidor HTTP, no como archivo local. ' +
+        'Usa GitHub Pages, la extensión "Live Server" de VS Code, ' +
+        'o ejecuta: python -m http.server 8080'
+      );
+    }
+
     if (!apiKey || apiKey.trim().length < 10) {
       throw new Error('API Key inválida. Consíguela gratis en aistudio.google.com');
     }
@@ -61,33 +71,44 @@ Reemplaza los valores de ejemplo con el análisis real. Los stats son números d
       contents: [{ parts: [{ text: buildPrompt(form) }] }],
       generationConfig: {
         temperature:     0.85,
-        maxOutputTokens: 1200
+        maxOutputTokens: 1500
       }
     };
 
-    const res = await fetch(url, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(body)
-    });
+    let res;
+    try {
+      res = await fetch(url, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(body)
+      });
+    } catch (networkErr) {
+      throw new Error('Error de red. Comprueba tu conexión a internet.');
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      const msg = err?.error?.message || `Error ${res.status}`;
+      const msg = err?.error?.message || `Error HTTP ${res.status}`;
+      // Mensajes de error más claros para los casos comunes
+      if (res.status === 400) throw new Error('API Key incorrecta o request mal formado.');
+      if (res.status === 403) throw new Error('API Key sin permisos. Comprueba que está activada en Google AI Studio.');
+      if (res.status === 429) throw new Error('Demasiadas peticiones. Espera un momento e inténtalo de nuevo.');
       throw new Error(msg);
     }
 
     const data = await res.json();
     const raw  = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (!raw) throw new Error('Respuesta vacía de la API');
+    if (!raw) throw new Error('Respuesta vacía de la API. Inténtalo de nuevo.');
 
-    const clean = raw.replace(/^```json\s*/i, '').replace(/```\s*$/m, '').trim();
+    // Extraer JSON aunque la IA meta bloques de markdown alrededor
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('La IA no devolvió JSON. Inténtalo de nuevo.');
 
     try {
-      return JSON.parse(clean);
+      return JSON.parse(jsonMatch[0]);
     } catch {
-      throw new Error('La IA devolvió un formato inesperado. Inténtalo de nuevo.');
+      throw new Error('JSON malformado en la respuesta. Inténtalo de nuevo.');
     }
   }
 
