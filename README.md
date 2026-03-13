@@ -3,15 +3,14 @@
 # 🌸 NPCForge ✨
 
 **De la vida real a tu propia aldea virtual 🎀**
-<br>
+
+
+
+
+
 *Convierte a las personas de tu entorno en NPCs interactivos con análisis psicológico generado por IA 🧚‍♀️*
 
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
-[![JavaScript](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
-[![Gemini](https://img.shields.io/badge/Gemini_API-4285F4?style=for-the-badge&logo=google&logoColor=white)]()
-
-[**Prueba el MVP 💅**](#) • [**Roadmap 🗺️**](#-roadmap-hacia-la-aldea-) • [**Despliegue 🚀**](#-despliegue-y-uso-)
+**[Prueba el MVP 💅](https://www.google.com/search?q=%23)** • **[Roadmap 🗺️](https://www.google.com/search?q=%23-roadmap-hacia-la-aldea-)** • **[Despliegue 🚀](https://www.google.com/search?q=%23-despliegue-y-uso-)**
 
 *(Añade aquí un GIF de 600x400 mostrando la generación de la ficha de personaje 💖)*
 
@@ -52,6 +51,8 @@ npcforge/
     ├── storage.js       # Interfaz de persistencia (localStorage)
     ├── gemini.js        # Inyección de prompt estructurado y fetch a la API
     └── app.js           # Controlador: Listeners, DOM render y state management
+
+```
 
 </details>
 
@@ -101,8 +102,7 @@ La hoja de ruta define la transición técnica desde un generador de texto está
 
 ## 🚀 Despliegue y Uso ✨
 
-> [!WARNING]
-> Las peticiones CORS a la API de Gemini requieren un entorno de servidor. **No ejecutes `index.html` haciendo doble clic** (`file://`) 🙅‍♀️🛑.
+> **Advertencia:** Las peticiones CORS a la API de Gemini requieren un entorno de servidor. **No ejecutes `index.html` haciendo doble clic** (`file://`) 🙅‍♀️🛑.
 
 ### 🔑 Requisito previo
 
@@ -113,7 +113,7 @@ Obtén tu API Key gratuita en [Google AI Studio](https://aistudio.google.com). T
 Clona el repositorio y levanta un servidor estático:
 
 ```bash
-git clone [https://github.com/tu-usuario/npcforge.git](https://github.com/tu-usuario/npcforge.git)
+git clone https://github.com/tu-usuario/npcforge.git
 cd npcforge
 
 # Usando Python:
@@ -133,7 +133,3 @@ python -m http.server 8080
 ## 🤫 Privacidad y Datos 💖
 
 **Arquitectura Zero-Backend (Fase 1).** Todos los perfiles psicológicos, descripciones de personas reales y tu API Key residen exclusivamente en el entorno de ejecución de tu navegador (`localStorage`) 💅. **No existen llamadas de red salientes** excepto el *payload* directo enviado a los servidores de Google Gemini para la inferencia de texto. ¡Tus secretos están a salvo! 🤐✨
-
-```
-
-```
