@@ -1,0 +1,258 @@
+/* ================================================
+   game.css — Estilos del juego y diálogo
+   ================================================ */
+
+/* ── Pantalla creación de personaje ── */
+
+#playerCreation {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.create-wrapper {
+  max-width: 680px;
+  width: 100%;
+}
+
+.create-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+.create-logo .npc   { color: var(--gold); }
+.create-logo .forge { color: var(--red-bright); }
+.create-logo .game  { color: var(--text-dim); font-size: 14px; font-weight: 400; }
+
+.create-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.create-sub {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 22px;
+  font-style: italic;
+}
+
+.create-editor-wrap {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.create-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ── Contenedor del juego ── */
+
+#gameContainer {
+  position: fixed;
+  inset: 0;
+  background: #0a0910;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#gameCanvas canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ── HUD ── */
+
+.hud-hint {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-mute);
+  background: rgba(10, 9, 16, 0.75);
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hud-back {
+  position: fixed;
+  top: 14px;
+  left: 16px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  background: rgba(10, 9, 16, 0.85);
+  padding: 7px 13px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+  z-index: 50;
+}
+.hud-back:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  text-decoration: none;
+}
+
+/* ── Overlay diálogo ── */
+
+#dialogOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 16px 16px;
+  z-index: 100;
+  pointer-events: none;
+}
+#dialogOverlay:not(.hidden) {
+  pointer-events: auto;
+}
+
+/* ── Caja de diálogo ── */
+
+.dialog-box {
+  background: var(--surface-1);
+  border: 2px solid var(--gold);
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -6px 40px rgba(0, 0, 0, 0.85);
+}
+
+/* Cabecera NPC */
+.dialog-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+#dialogNpcSprite {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+#dialogNpcName {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+#dialogNpcArch {
+  font-size: 13px;
+  color: var(--red-bright);
+  font-style: italic;
+}
+
+.dialog-close {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 5px 9px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.dialog-close:hover { border-color: var(--red-bright); color: var(--red-bright); }
+
+/* Historial */
+#dialogHistory {
+  min-height: 80px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.dmsg {
+  display: flex;
+  gap: 10px;
+  font-size: 16px;
+  line-height: 1.55;
+  align-items: baseline;
+}
+
+.dname {
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  min-width: 55px;
+  font-weight: 600;
+}
+
+.dtext { color: var(--text); }
+
+.dmsg.user  .dname { color: var(--teal-light); }
+.dmsg.npc   .dname { color: var(--gold); }
+.dmsg.sys-err .dname { color: var(--red-bright); }
+.dmsg.thinking .dtext {
+  color: var(--text-mute);
+  font-style: italic;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* Campo de entrada */
+.dialog-input-row {
+  display: flex;
+  border-top: 1px solid var(--border);
+}
+
+.dialog-input-row input {
+  flex: 1;
+  background: var(--surface-2);
+  border: none;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  padding: 10px 14px;
+  outline: none;
+}
+.dialog-input-row input::placeholder { color: var(--text-mute); font-style: italic; }
+
+.dialog-input-row button {
+  background: var(--gold);
+  border: none;
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.05em;
+}
+.dialog-input-row button:hover { background: var(--gold-light); }

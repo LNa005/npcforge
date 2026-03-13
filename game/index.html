@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NPCForge — Aldea</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+
+  <!-- ── Pantalla creación de personaje ── -->
+  <div id="playerCreation">
+    <div class="create-wrapper">
+      <div class="create-logo">
+        <span class="npc">NPC</span><span class="forge">Forge</span><span class="game"> — Aldea</span>
+      </div>
+      <h2 class="create-title">Crea tu personaje</h2>
+      <p class="create-sub">Este será tu avatar en la aldea. Puedes cambiarlo cuando quieras.</p>
+      <div id="playerEditorContainer" class="create-editor-wrap"></div>
+      <div class="create-actions">
+        <button class="btn btn-primary" onclick="confirmPlayer()">⚔ Empezar aventura</button>
+        <a href="../index.html" class="btn btn-secondary">← Volver</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Contenedor del juego ── -->
+  <div id="gameContainer" class="hidden">
+
+    <div id="gameCanvas"></div>
+
+    <!-- HUD -->
+    <div class="hud-hint">WASD / ↑←↓→ mover &nbsp;·&nbsp; E interactuar &nbsp;·&nbsp; ESC cerrar</div>
+    <a href="../index.html" class="hud-back">← NPCForge</a>
+
+    <!-- Overlay diálogo -->
+    <div id="dialogOverlay" class="hidden">
+      <div class="dialog-box">
+        <div class="dialog-head">
+          <img id="dialogNpcSprite" alt="sprite">
+          <div>
+            <p id="dialogNpcName"></p>
+            <p id="dialogNpcArch"></p>
+          </div>
+          <button class="dialog-close" onclick="Dialog.close()">✕</button>
+        </div>
+        <div id="dialogHistory"></div>
+        <div class="dialog-input-row">
+          <input
+            type="text"
+            id="dialogInput"
+            placeholder="Di algo…"
+            autocomplete="off"
+            onkeydown="if(event.key==='Enter'){ event.stopPropagation(); Dialog.send(); }">
+          <button onclick="Dialog.send()">→</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts: orden importante -->
+  <script src="../js/storage.js"></script>
+  <script src="../js/sprite-editor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
+  <script src="js/dialog.js"></script>
+  <script src="js/world.js"></script>
+
+  <script>
+    /* ── Lógica de arranque ── */
+    const savedPlayer = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
+
+    if (savedPlayer?.spriteData) {
+      _launchGame();
+    } else {
+      // Mostrar editor de personaje
+      SpriteEditor.mount(document.getElementById('playerEditorContainer'), null);
+    }
+
+    function confirmPlayer() {
+      const spriteData  = SpriteEditor.getSprite();
+      const spriteState = SpriteEditor.getState();
+      localStorage.setItem('npcforge_player', JSON.stringify({ spriteData, spriteState }));
+      _launchGame();
+    }
+
+    function _launchGame() {
+      document.getElementById('playerCreation').classList.add('hidden');
+      document.getElementById('gameContainer').classList.remove('hidden');
+
+      new Phaser.Game({
+        type:            Phaser.AUTO,
+        width:           640,
+        height:          480,
+        pixelArt:        true,
+        backgroundColor: '#0a0910',
+        parent:          'gameCanvas',
+        physics: {
+          default: 'arcade',
+          arcade:  { debug: false }
+        },
+        scene: [WorldScene]
+      });
+    }
+  </script>
+
+</body>
+</html>
