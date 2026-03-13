@@ -14,10 +14,11 @@
   <div id="playerCreation">
     <div class="create-wrapper">
       <div class="create-logo">
-        <span class="npc">NPC</span><span class="forge">Forge</span><span class="game"> — Aldea</span>
+        <span class="npc">NPC</span><span class="forge">Forge</span>
+        <span class="game"> — Aldea</span>
       </div>
       <h2 class="create-title">Crea tu personaje</h2>
-      <p class="create-sub">Este será tu avatar en la aldea. Puedes cambiarlo cuando quieras.</p>
+      <p class="create-sub">Este será tu avatar en la aldea.</p>
       <div id="playerEditorContainer" class="create-editor-wrap"></div>
       <div class="create-actions">
         <button class="btn btn-primary" onclick="confirmPlayer()">⚔ Empezar aventura</button>
@@ -28,10 +29,7 @@
 
   <!-- ── Contenedor del juego ── -->
   <div id="gameContainer" class="hidden">
-
     <div id="gameCanvas"></div>
-
-    <!-- HUD -->
     <div class="hud-hint">WASD / ↑←↓→ mover &nbsp;·&nbsp; E interactuar &nbsp;·&nbsp; ESC cerrar</div>
     <a href="../index.html" class="hud-back">← NPCForge</a>
 
@@ -48,20 +46,14 @@
         </div>
         <div id="dialogHistory"></div>
         <div class="dialog-input-row">
-          <input
-            type="text"
-            id="dialogInput"
-            placeholder="Di algo…"
-            autocomplete="off"
+          <input type="text" id="dialogInput" placeholder="Di algo…" autocomplete="off"
             onkeydown="if(event.key==='Enter'){ event.stopPropagation(); Dialog.send(); }">
           <button onclick="Dialog.send()">→</button>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Scripts: orden importante -->
   <script src="../js/storage.js"></script>
   <script src="../js/sprite-editor.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
@@ -69,27 +61,34 @@
   <script src="js/world.js"></script>
 
   <script>
-    /* ── Lógica de arranque ── */
-    const savedPlayer = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
-
-    if (savedPlayer?.spriteData) {
-      _launchGame();
-    } else {
-      // Mostrar editor de personaje
-      SpriteEditor.mount(document.getElementById('playerEditorContainer'), null);
+    /* ── Carga imágenes base64 antes de iniciar Phaser ── */
+    function loadImage(key, dataUrl) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload  = () => { preloadedImages[key] = img; resolve(); };
+        img.onerror = () => resolve(); // fallback silencioso
+        img.src = dataUrl;
+      });
     }
 
-    function confirmPlayer() {
-      const spriteData  = SpriteEditor.getSprite();
-      const spriteState = SpriteEditor.getState();
-      localStorage.setItem('npcforge_player', JSON.stringify({ spriteData, spriteState }));
-      _launchGame();
-    }
-
-    function _launchGame() {
+    async function _launchGame() {
       document.getElementById('playerCreation').classList.add('hidden');
       document.getElementById('gameContainer').classList.remove('hidden');
 
+      // Precargar sprite del jugador
+      const playerData = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
+      if (playerData?.spriteData) {
+        await loadImage('player_spr', playerData.spriteData);
+      }
+
+      // Precargar sprites de NPCs
+      const npcs = Storage.getAll();
+      await Promise.all(
+        npcs.filter(n => n.spriteData)
+            .map(n => loadImage(`npc_${n.id}`, n.spriteData))
+      );
+
+      // Ahora sí, lanzar Phaser con todos los sprites listos
       new Phaser.Game({
         type:            Phaser.AUTO,
         width:           640,
@@ -103,6 +102,21 @@
         },
         scene: [WorldScene]
       });
+    }
+
+    async function confirmPlayer() {
+      const spriteData  = SpriteEditor.getSprite();
+      const spriteState = SpriteEditor.getState();
+      localStorage.setItem('npcforge_player', JSON.stringify({ spriteData, spriteState }));
+      await _launchGame();
+    }
+
+    // Al entrar: ¿ya tiene personaje?
+    const savedPlayer = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
+    if (savedPlayer?.spriteData) {
+      _launchGame();
+    } else {
+      SpriteEditor.mount(document.getElementById('playerEditorContainer'), null);
     }
   </script>
 

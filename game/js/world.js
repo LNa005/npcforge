@@ -7,6 +7,9 @@ const MAP   = 40;
 const SPEED = 70;
 const REACH = 22;
 
+// Los Image elements precargados desde game/index.html antes de lanzar Phaser
+const preloadedImages = {};
+
 class WorldScene extends Phaser.Scene {
 
   constructor() {
@@ -23,38 +26,17 @@ class WorldScene extends Phaser.Scene {
     this.prompt     = null;
   }
 
-  /* ── Preload: solo cargar lo que NO es base64 ── */
   preload() {
     this.npcsData = Storage.getAll();
-    // Los sprites base64 se añaden en create() via _addBase64Texture
-    // para evitar problemas del loader con data URLs
   }
 
-  /* ── Helper: registrar textura desde base64 sin el loader ── */
-  _addBase64Texture(key, dataUrl) {
-    return new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => {
+  create() {
+    // Registrar sprites precargados en Phaser sincrónicamente
+    Object.entries(preloadedImages).forEach(([key, img]) => {
+      if (!this.textures.exists(key)) {
         this.textures.addImage(key, img);
-        resolve();
-      };
-      img.onerror = () => resolve(); // falla silenciosa, se usará fallback
-      img.src = dataUrl;
-    });
-  }
-
-  /* ── Create ── */
-  async create() {
-    // Cargar sprites base64 antes de construir el mundo
-    const playerData = JSON.parse(localStorage.getItem('npcforge_player') || 'null');
-    if (playerData?.spriteData) {
-      await this._addBase64Texture('player_spr', playerData.spriteData);
-    }
-    for (const npc of this.npcsData) {
-      if (npc.spriteData) {
-        await this._addBase64Texture(`npc_${npc.id}`, npc.spriteData);
       }
-    }
+    });
 
     this._makeTextures();
     this._buildMap();
@@ -66,12 +48,9 @@ class WorldScene extends Phaser.Scene {
     this._setupInput();
     this._makePromptLabel();
 
-    if (this.npcsData.length === 0) {
-      this._emptyHint();
-    }
+    if (this.npcsData.length === 0) this._emptyHint();
   }
 
-  /* ── Update ── */
   update() {
     if (Dialog.isOpen()) {
       this.player.setVelocity(0, 0);
@@ -95,9 +74,7 @@ class WorldScene extends Phaser.Scene {
     this._checkProximity();
   }
 
-  /* ── Texturas procedurales ── */
   _makeTextures() {
-    // 4 variantes de hierba
     [
       [0x4a7c3f, 0x3d6b34],
       [0x4f8442, 0x426e37],
@@ -107,14 +84,11 @@ class WorldScene extends Phaser.Scene {
       const g = this.add.graphics();
       g.fillStyle(main); g.fillRect(0, 0, 16, 16);
       g.fillStyle(dark);
-      g.fillRect(0, 0, 2, 2);
-      g.fillRect(13, 7, 2, 2);
-      g.fillRect(5, 12, 2, 2);
+      g.fillRect(0, 0, 2, 2); g.fillRect(13, 7, 2, 2); g.fillRect(5, 12, 2, 2);
       g.generateTexture(`grass${i}`, 16, 16);
       g.destroy();
     });
 
-    // Camino
     const p = this.add.graphics();
     p.fillStyle(0x8b7355); p.fillRect(0, 0, 16, 16);
     p.fillStyle(0x9a8265); p.fillRect(2, 4, 3, 2); p.fillRect(9, 10, 3, 2);
@@ -122,7 +96,6 @@ class WorldScene extends Phaser.Scene {
     p.generateTexture('path', 16, 16);
     p.destroy();
 
-    // Árbol
     const t = this.add.graphics();
     t.fillStyle(0x2a4a18); t.fillRect(1, 3, 14, 9);
     t.fillStyle(0x3a6a22); t.fillRect(3, 1, 10, 5);
@@ -131,7 +104,6 @@ class WorldScene extends Phaser.Scene {
     t.generateTexture('tree', 16, 16);
     t.destroy();
 
-    // Jugador fallback (si el base64 no cargó)
     if (!this.textures.exists('player_spr')) {
       const pf = this.add.graphics();
       pf.fillStyle(0xc9a84c); pf.fillRect(4, 0, 8, 8);
@@ -140,7 +112,6 @@ class WorldScene extends Phaser.Scene {
       pf.destroy();
     }
 
-    // NPC fallback
     if (!this.textures.exists('npc_default')) {
       const nf = this.add.graphics();
       nf.fillStyle(0xe8d0a0); nf.fillRect(4, 0, 8, 8);
@@ -150,7 +121,6 @@ class WorldScene extends Phaser.Scene {
     }
   }
 
-  /* ── Mapa procedural ── */
   _buildMap() {
     const C = MAP / 2;
     for (let y = 0; y < MAP; y++) {
@@ -158,47 +128,34 @@ class WorldScene extends Phaser.Scene {
       for (let x = 0; x < MAP; x++) {
         const dx = Math.abs(x - C);
         const dy = Math.abs(y - C);
-        if (x === C || y === C) {
-          this.mapGrid[y][x] = 'path';
-        } else if (dx < 7 && dy < 7) {
-          this.mapGrid[y][x] = 'grass';
-        } else {
-          this.mapGrid[y][x] = Math.random() < 0.22 ? 'tree' : 'grass';
-        }
+        if (x === C || y === C)          this.mapGrid[y][x] = 'path';
+        else if (dx < 7 && dy < 7)       this.mapGrid[y][x] = 'grass';
+        else this.mapGrid[y][x] = Math.random() < 0.22 ? 'tree' : 'grass';
       }
     }
   }
 
-  /* ── Renderizar suelo ── */
   _drawBackground() {
     const rt = this.add.renderTexture(0, 0, MAP * TILE, MAP * TILE);
     for (let y = 0; y < MAP; y++) {
       for (let x = 0; x < MAP; x++) {
-        const key = this.mapGrid[y][x] === 'path'
-          ? 'path'
-          : `grass${(x * 3 + y * 7) % 4}`;
+        const key = this.mapGrid[y][x] === 'path' ? 'path' : `grass${(x * 3 + y * 7) % 4}`;
         rt.draw(key, x * TILE, y * TILE);
       }
     }
   }
 
-  /* ── Árboles con física ── */
   _placeTrees() {
     this.trees = this.physics.add.staticGroup();
     for (let y = 0; y < MAP; y++) {
       for (let x = 0; x < MAP; x++) {
         if (this.mapGrid[y][x] === 'tree') {
-          this.trees.create(
-            x * TILE + TILE / 2,
-            y * TILE + TILE / 2,
-            'tree'
-          );
+          this.trees.create(x * TILE + TILE / 2, y * TILE + TILE / 2, 'tree');
         }
       }
     }
   }
 
-  /* ── Jugador ── */
   _spawnPlayer() {
     const cx = (MAP / 2) * TILE;
     this.player = this.physics.add.sprite(cx, cx, 'player_spr');
@@ -207,7 +164,6 @@ class WorldScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.trees);
   }
 
-  /* ── NPCs ── */
   _spawnNpcs() {
     const C = MAP / 2;
     const offsets = [
@@ -227,10 +183,8 @@ class WorldScene extends Phaser.Scene {
       this.physics.add.collider(this.player, s);
 
       this.add.text(wx, wy - 11, npc.form.nombre || '?', {
-        fontSize: '5px',
-        fontFamily: 'monospace',
-        color:    '#e8dfc8',
-        backgroundColor: '#0d0c0eb0',
+        fontSize: '5px', fontFamily: 'monospace',
+        color: '#e8dfc8', backgroundColor: '#0d0c0eb0',
         padding: { x: 2, y: 1 }
       }).setOrigin(0.5, 1).setDepth(25);
 
@@ -238,7 +192,6 @@ class WorldScene extends Phaser.Scene {
     });
   }
 
-  /* ── Cámara ── */
   _setupCamera() {
     this.cameras.main
       .setZoom(2)
@@ -246,10 +199,9 @@ class WorldScene extends Phaser.Scene {
       .startFollow(this.player, true, 0.1, 0.1);
   }
 
-  /* ── Input ── */
   _setupInput() {
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.wasd    = {
+    this.wasd = {
       W: this.input.keyboard.addKey('W'),
       A: this.input.keyboard.addKey('A'),
       S: this.input.keyboard.addKey('S'),
@@ -268,18 +220,14 @@ class WorldScene extends Phaser.Scene {
     });
   }
 
-  /* ── Etiqueta [E] Hablar ── */
   _makePromptLabel() {
     this.prompt = this.add.text(0, 0, '[E] Hablar', {
-      fontSize: '5px',
-      fontFamily: 'monospace',
-      color:    '#c9a84c',
-      backgroundColor: '#0d0c0ecc',
+      fontSize: '5px', fontFamily: 'monospace',
+      color: '#c9a84c', backgroundColor: '#0d0c0ecc',
       padding: { x: 3, y: 2 }
     }).setOrigin(0.5, 1).setDepth(30).setVisible(false);
   }
 
-  /* ── Hint si no hay NPCs ── */
   _emptyHint() {
     const cx = (MAP / 2) * TILE;
     this.add.text(cx, cx + 20,
@@ -292,23 +240,17 @@ class WorldScene extends Phaser.Scene {
     ).setOrigin(0.5).setDepth(20);
   }
 
-  /* ── Comprobar NPC cercano ── */
   _checkProximity() {
     let closest = null;
     let minDist = Infinity;
 
     this.npcSprites.forEach(s => {
-      const d = Phaser.Math.Distance.Between(
-        this.player.x, this.player.y, s.x, s.y
-      );
+      const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, s.x, s.y);
       if (d < REACH && d < minDist) { minDist = d; closest = s; }
     });
 
     this.nearbyNpc = closest;
-    if (closest) {
-      this.prompt.setPosition(closest.x, closest.y - 11).setVisible(true);
-    } else {
-      this.prompt.setVisible(false);
-    }
+    this.prompt.setVisible(!!closest);
+    if (closest) this.prompt.setPosition(closest.x, closest.y - 11);
   }
 }
