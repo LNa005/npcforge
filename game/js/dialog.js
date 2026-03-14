@@ -121,6 +121,9 @@ Respuestas cortas (máximo 2-3 frases). No menciones que eres una IA ni que tien
       histories[_npcId].push({ role: 'assistant', content: reply });
       _appendMsg(npc.form.nombre || 'NPC', reply, 'npc');
 
+      // Evaluar misiones en segundo plano (sin bloquear el chat)
+      Missions.checkAuto(npc, histories[_npcId], apiKey).catch(() => {});
+
     } catch {
       thinking.remove();
       _appendMsg('Sistema', 'Error de conexión.', 'sys-err');
