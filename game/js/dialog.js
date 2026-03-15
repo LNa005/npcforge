@@ -157,6 +157,13 @@ Responde SIEMPRE con un JSON con esta estructura exacta:
         _showOptions(opciones);
       }
 
+      // Evaluar cambio de stats (cada 3 mensajes para no gastar demasiadas llamadas)
+      if (histories[_npcId].length % 3 === 0) {
+        Stats.evaluate(npc, histories[_npcId], apiKey)
+          .then(changes => Stats.showChanges(changes))
+          .catch(() => {});
+      }
+
     } catch {
       thinking.remove();
       _appendMsg('Sistema', 'Error de conexión.', 'sys-err');

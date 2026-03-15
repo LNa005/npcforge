@@ -465,3 +465,37 @@
   border-color: var(--gold);
   color: var(--gold);
 }
+
+/* ── Indicador de cambio de stats ── */
+
+.dmsg.stat-changes {
+  padding: 4px 0;
+  opacity: 0.85;
+}
+
+.stat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.stat-chip {
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.stat-chip.stat-up {
+  color: var(--teal-light);
+  border-color: var(--teal);
+  background: rgba(38, 166, 154, 0.1);
+}
+
+.stat-chip.stat-down {
+  color: var(--red-bright);
+  border-color: var(--red);
+  background: rgba(180, 40, 40, 0.1);
+}
