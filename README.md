@@ -1,14 +1,25 @@
 <div align="center">
 
+<img src="screenshots/screen_app.png" width="100%" style="border-radius:12px"/>
+
+<br/>
+<br/>
+
 # 🌸 NPCForge ✨
 
-**De la vida real a tu propia aldea virtual 🎀**
+<p>
+  <img src="https://img.shields.io/badge/✦_estado-en_desarrollo-ffb3c6?style=for-the-badge&labelColor=fce4f0"/>
+  <img src="https://img.shields.io/badge/🎮_engine-Phaser_3-d4bfee?style=for-the-badge&labelColor=ede0f8"/>
+  <img src="https://img.shields.io/badge/🤖_IA-Mistral_AI-a8dfc4?style=for-the-badge&labelColor=dff0f4"/>
+  <img src="https://img.shields.io/badge/💾_storage-localStorage-f8c8a8?style=for-the-badge&labelColor=feeee4"/>
+</p>
 
-*Convierte a las personas de tu entorno en NPCs interactivos con análisis psicológico generado por IA ⚡*
+### *Convierte a las personas de tu vida en personajes de RPG*
+### *y vívelos en tu propia aldea virtual* 🎀
 
-![estado](https://img.shields.io/badge/estado-en%20desarrollo-ff6b6b?style=flat-square)
-![stack](https://img.shields.io/badge/stack-vanilla%20js%20%2B%20phaser3-c9a84c?style=flat-square)
-![ia](https://img.shields.io/badge/IA-Mistral-7b5ea7?style=flat-square)
+<br/>
+
+[✦ Ver la app](https://lna005.github.io/npcforge/) &nbsp;&nbsp;·&nbsp;&nbsp; [🌸 Jugar](https://lna005.github.io/npcforge/game/index.html) &nbsp;&nbsp;·&nbsp;&nbsp; [📋 Hoja de ruta](#-hoja-de-ruta)
 
 </div>
 
@@ -16,9 +27,19 @@
 
 ## 💜 ¿Qué es NPCForge?
 
-Describes a alguien de tu vida. La IA genera una **ficha RPG psicológica** completa — stats, motivación oculta, punto débil, cómo ganarte su confianza y misiones de relación 🔮
+> Describes a alguien de tu vida. La IA genera una **ficha RPG psicológica** completa — stats, motivación oculta, punto débil, cómo ganarte su confianza y misiones de relación 🔮
 
-Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explorar un mapa top-down** donde caminarás por una aldea con casas, plaza y NPCs que deambulan libremente, responden en personaje y evolucionan según cómo los tratas ⚡
+Diseñas su sprite en pixel art. Lo guardas en tu aldea. Exploras un mapa top-down donde los NPCs deambulan libremente, te responden en personaje y **evolucionan según cómo los tratas** ⚡
+
+<br/>
+
+<div align="center">
+
+| 🧠 Analiza | 🎨 Diseña | 🗺️ Explora | 💬 Habla |
+|:---:|:---:|:---:|:---:|
+| La IA convierte a una persona real en una ficha RPG psicológica | Diseña su sprite pixel art 16×16 con el editor integrado | Pasea por la aldea y visita sus casas en el mapa top-down | Habla con ellos en personaje — con opciones de diálogo y misiones |
+
+</div>
 
 ---
 
@@ -26,39 +47,85 @@ Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explor
 
 <div align="center">
 
-### 🌸 Generador de fichas RPG
+<table>
+<tr>
+<td width="50%">
+
+**🌸 Generador de fichas**
 ![App](screenshots/screen_app.png)
 
-### 🌸 Aldea explorable
+</td>
+<td width="50%">
+
+**🌸 Aldea explorable**
 ![Game](screenshots/screen_game.png)
+
+</td>
+</tr>
+</table>
 
 </div>
 
 ---
 
-## 🌟 Lo que ya funciona
+## 🌟 Features
 
-🌸 Generación de ficha RPG completa con IA (Mistral)  
-🌸 6 stats psicológicos animados  
-🌸 Editor de sprite pixel art 16×16  
-🌸 Galería "Mi aldea" con tarjetas  
-🌸 Mapa top-down explorable con Phaser.js — pantalla completa  
-🌸 Plaza central con adoquines, fuente, faroles y bancos  
-🌸 Una casa por cada NPC con tejado de color único  
-🌸 Nombre del NPC sobre la puerta de su casa  
-🌸 Nombre flotante encima del sprite del NPC en el mapa  
-🌸 NPCs con movimiento libre (wandering por su zona)  
-🌸 Colisionadores en casas, árboles y fuente  
-🌸 Avatar del jugador personalizable con editor de sprite  
-🌸 Chat con NPCs en personaje vía Mistral  
-🌸 Teclado capturado correctamente durante el chat  
-🌸 Opciones de diálogo clicables — la IA decide cuándo presentarlas  
-🌸 Panel de misiones activas — aparece al acercarte a un NPC  
-🌸 Misiones que se completan automáticamente durante el chat  
-🌸 Notificación dorada al completar una misión  
-🌸 Stats que evolucionan según cómo hablas con el NPC  
-🌸 Chips de cambio de stats visibles en el chat (+/- por cada stat)  
-🌸 Sin servidor, sin registro — todo en `localStorage` 🌷  
+<details open>
+<summary><b>🎮 Juego & Mapa</b></summary>
+<br/>
+
+- 🌸 Mapa top-down explorable — pantalla completa con Phaser.js
+- 🌸 Plaza central con adoquines, fuente, faroles y bancos
+- 🌸 Una casa por cada NPC con tejado de color único
+- 🌸 Bosque exterior con árboles de 3 tamaños distintos
+- 🌸 Arbustos y rocas decorativas en el bosque
+- 🌸 Flores de colores pastel en la zona central
+- 🌸 Lago con colisionador en la esquina del mapa
+- 🌸 NPCs con movimiento libre por su zona
+- 🌸 Avatar del jugador personalizable
+
+</details>
+
+<details open>
+<summary><b>💬 Chat & Misiones</b></summary>
+<br/>
+
+- 🌸 Chat con NPCs en personaje vía Mistral AI
+- 🌸 Opciones de diálogo clicables — la IA decide cuándo presentarlas
+- 🌸 Panel de misiones activas al acercarte a un NPC
+- 🌸 Misiones que se completan automáticamente durante el chat
+- 🌸 Notificación animada al completar una misión
+
+</details>
+
+<details open>
+<summary><b>📈 Stats & Relaciones</b></summary>
+<br/>
+
+- 🌸 6 stats psicológicos que **evolucionan** según cómo hablas
+- 🌸 Chips visuales de cambio de stat en el chat
+- 🌸 Nivel de relación global que cambia en tiempo real
+
+| Nivel | Emoji | Condición |
+|---|:---:|---|
+| Desconocida | 🌫️ | Estado inicial |
+| Conocida | 🌸 | Primeras conversaciones positivas |
+| Aliada | 💜 | Alta empatía y lealtad |
+| Rival | ⚔️ | Manipulación o ego elevados |
+| Enemiga | 💀 | Relación muy deteriorada |
+
+</details>
+
+<details open>
+<summary><b>🎨 Diseño & UX</b></summary>
+<br/>
+
+- 🌸 Tema pastel girlie en toda la app
+- 🌸 Fuentes Playfair Display + Nunito
+- 🌸 Animaciones y micro-interacciones
+- 🌸 Sin servidor, sin registro — todo en `localStorage`
+
+</details>
 
 ---
 
@@ -66,87 +133,100 @@ Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explor
 
 ```
 npcforge/
-├── index.html
-├── README.md
-├── screenshots/
-│   ├── screen_app.png
-│   └── screen_game.png
-├── css/
-│   ├── base.css
-│   ├── layout.css
-│   └── sheet.css
-├── js/
-│   ├── storage.js
-│   ├── gemini.js        ← Mistral API
-│   ├── sprite-editor.js
-│   └── app.js
-└── game/
-    ├── index.html
-    ├── css/
-    │   └── game.css
-    └── js/
-        ├── world.js     ← Mapa Phaser
-        ├── dialog.js    ← Chat con opciones de diálogo
-        ├── missions.js  ← Sistema de misiones
-        └── stats.js     ← Stats dinámicos
+├── 📄 index.html
+├── 📁 screenshots/
+├── 📁 css/
+│   ├── base.css          ✦ Variables, fuentes, animaciones
+│   ├── layout.css        ✦ Header, formulario, galería
+│   └── sheet.css         ✦ Ficha RPG + editor de sprite
+├── 📁 js/
+│   ├── storage.js        ✦ CRUD localStorage
+│   ├── gemini.js         ✦ Mistral API
+│   ├── sprite-editor.js  ✦ Editor pixel art 16×16
+│   └── app.js            ✦ Controlador principal
+└── 📁 game/
+    ├── 📄 index.html
+    ├── 📁 css/
+    │   └── game.css      ✦ Estilos del juego
+    └── 📁 js/
+        ├── world.js      ✦ Mapa Phaser, NPCs, decoración
+        ├── dialog.js     ✦ Chat con opciones de diálogo
+        ├── missions.js   ✦ Sistema de misiones
+        └── stats.js      ✦ Stats dinámicos + relaciones
 ```
 
 ---
 
 ## 🗺️ Hoja de ruta
 
+### 🐛 Pendiente / bugs
+- [ ] 🌊 Mejorar el lago — forma y detalle visual
+- [ ] 🌸 Quitar flores de encima de caminos y casas
+- [ ] 📸 Actualizar screenshots con el nuevo diseño pastel
+
+### 📋 Fase 4 — Misiones *(completada)*
+- [x] 🌸 Panel HUD con misiones activas
+- [x] 🌸 Completar misiones durante el chat con IA
+- [x] 🌸 Notificación animada al completar
+- [x] 🌸 Opciones de diálogo clicables
+
 ### 📈 Fase 5 — Relaciones vivas *(en progreso)*
-- [x] 🌸 Stats que evolucionan según cómo hablas con el NPC
-- [x] 🌸 Chips visuales de cambio de stat en el chat
-- [ ] 🌸 Nivel de relación global (desconocido → aliado → rival…)
+- [x] 🌸 Stats evolutivos con chips visuales
+- [x] 🌸 Nivel de relación global (5 estados)
+- [x] 🌸 Badge de relación en tiempo real
 - [ ] 🌸 Historial de relación con cada NPC
 
 ### 🎮 Fase 6 — Animaciones
 - [ ] 🌸 Caminar en 4 direcciones (sprite sheet)
 - [ ] 🌸 Idle animation
-- [ ] 🌸 Animación de NPCs más natural
+- [ ] 🌸 Movimiento más natural de los NPCs
 
 ### 📱 Fase 7 — App nativa
-- [ ] 🌸 Versión de escritorio (Electron o Tauri)
-- [ ] 🌸 Versión móvil (Capacitor o PWA)
-- [ ] 🌸 Controles táctiles para el mapa
+- [ ] 🌸 Escritorio (Electron o Tauri)
+- [ ] 🌸 Móvil (Capacitor o PWA)
+- [ ] 🌸 Controles táctiles
 
 ### 🌐 Fase 8 — Servidor y multijugador
 - [ ] 🌸 Backend propio (Node.js + base de datos)
-- [ ] 🌸 Registro y login de usuarios
+- [ ] 🌸 Login y cuentas de usuario
 - [ ] 🌸 Aldeas guardadas en la nube
-- [ ] 🌸 Multijugador — *por definir* (¿visitar aldeas ajenas? ¿eventos globales? ¿NPCs compartidos?)
+- [ ] 🌸 Multijugador *(por definir)*
 
 ### 🌈 Ideas futuras
 - [ ] 🌸 Exportar ficha como imagen compartible
-- [ ] 🌸 Comparar dos NPCs
-- [ ] 🌸 Backup / import JSON de la aldea completa
-- [ ] 🌸 Explorar aldeas públicas de otros jugadores
-- [ ] 🌸 Música y efectos de sonido ambient
+- [ ] 🌸 Comparar dos NPCs cara a cara
+- [ ] 🌸 Música ambient y efectos de sonido
 - [ ] 🌸 Ciclo día/noche en el mapa
+- [ ] 🌸 Explorar aldeas públicas de otros jugadores
 
 ---
 
-## 🛠️ Stack actual
+## 🛠️ Stack
 
-🍦 **Vanilla JS** — sin frameworks, sin npm  
-🤖 **Mistral AI** — `mistral-small-latest`, free tier  
-🎮 **Phaser 3** — motor 2D via CDN  
-💾 **localStorage** — persistencia local  
-🎨 **CSS custom properties** — theming completo  
+<div align="center">
 
-## 🔭 Stack futuro *(tentativo)*
+| Capa | Tecnología | Notas |
+|---|---|---|
+| Frontend | Vanilla JS | Sin frameworks, sin npm |
+| Motor de juego | Phaser 3 | Via CDN |
+| IA | Mistral AI `mistral-small-latest` | Free tier |
+| Persistencia | localStorage | Sin servidor |
+| Fuentes | Playfair Display + Nunito | Google Fonts |
+| *(futuro)* App nativa | Electron / Tauri / Capacitor | — |
+| *(futuro)* Servidor | Node.js + Express | — |
+| *(futuro)* Base de datos | PostgreSQL o SQLite | — |
+| *(futuro)* Tiempo real | WebSockets | Para multijugador |
 
-🖥️ **Electron / Tauri** — app de escritorio  
-📱 **Capacitor / PWA** — app móvil  
-⚙️ **Node.js + Express** — servidor  
-🗄️ **PostgreSQL o SQLite** — base de datos  
-🔌 **WebSockets** — tiempo real para multijugador  
+</div>
 
 ---
 
 <div align="center">
 
 *Hecho con demasiado amor, "mostesito" y ganas 💜*
+
+⸻
+
+*🌸 &nbsp; ✦ &nbsp; 🌸 &nbsp; ✦ &nbsp; 🌸*
 
 </div>
