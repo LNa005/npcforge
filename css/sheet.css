@@ -1,46 +1,43 @@
 /* ================================================
-   sheet.css — Ficha RPG resultado (el output completo)
+   sheet.css — Ficha RPG girlie ✨
    ================================================ */
 
 .rpg-sheet {
   background: var(--surface-1);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  animation: sheetReveal 0.5s ease;
+  box-shadow: var(--shadow-md);
+  animation: bounceIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-@keyframes sheetReveal {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Cabecera de ficha ── */
+/* ── Cabecera ── */
 .sheet-head {
-  background: linear-gradient(160deg, #1a0e0a 0%, #0e1020 60%, #0a0d16 100%);
-  border-bottom: 2px solid var(--gold);
+  background: linear-gradient(135deg, #fce4f0 0%, #ede0f8 50%, #dff0f4 100%);
+  border-bottom: 2px solid var(--border);
   padding: 28px 28px 22px;
   position: relative;
   overflow: hidden;
 }
 
-/* Ornamento de fondo */
-.sheet-head::after {
-  content: '⚔';
+.sheet-head::before {
+  content: '🌸';
   position: absolute;
-  right: 24px;
+  right: 28px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 72px;
-  opacity: 0.06;
-  color: var(--gold);
+  font-size: 64px;
+  opacity: 0.18;
   pointer-events: none;
+  animation: sparkle 4s ease-in-out infinite;
 }
 
 .sheet-archetype {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 11px;
-  letter-spacing: 0.2em;
-  color: var(--red-bright);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--rose);
   text-transform: uppercase;
   margin-bottom: 6px;
 }
@@ -49,372 +46,321 @@
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 700;
-  color: var(--gold-light);
-  letter-spacing: 0.06em;
+  color: var(--text);
   line-height: 1.1;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
-.sheet-lema {
-  font-family: var(--font-body);
-  font-size: 16px;
+.sheet-motto {
+  font-family: var(--font-display);
+  font-size: 14px;
   font-style: italic;
   color: var(--text-dim);
-  border-left: 2px solid var(--border-lit);
-  padding-left: 12px;
-  max-width: 500px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  margin-top: 10px;
+}
+.sheet-motto::before { content: '"'; color: var(--rose); }
+.sheet-motto::after  { content: '"'; color: var(--rose); }
+
+/* ── Stats ── */
+.sheet-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--border);
 }
 
-.sheet-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 14px;
+.stat-cell {
+  padding: 14px 12px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  transition: background var(--transition-fast);
+}
+.stat-cell:hover { background: var(--surface-2); }
+.stat-cell:nth-child(3n) { border-right: none; }
+
+.stat-name {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  margin-bottom: 4px;
 }
 
-.sheet-tag {
-  font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  padding: 4px 10px;
-  border: 1px solid var(--border-lit);
-  color: var(--text-dim);
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
 }
 
-/* ── Cuerpo de la ficha en grid ── */
+/* Colores por stat */
+.stat-carisma      .stat-value { color: var(--rose); }
+.stat-manipulacion .stat-value { color: var(--lavender); }
+.stat-lealtad      .stat-value { color: var(--mint); }
+.stat-ego          .stat-value { color: var(--peach); }
+.stat-empatia      .stat-value { color: #f0a0d0; }
+.stat-drama        .stat-value { color: var(--gold); }
+
+.stat-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stat-carisma      .stat-fill { background: linear-gradient(90deg, var(--rose-light), var(--rose)); }
+.stat-manipulacion .stat-fill { background: linear-gradient(90deg, var(--lavender-light), var(--lavender)); }
+.stat-lealtad      .stat-fill { background: linear-gradient(90deg, var(--mint-light), var(--mint)); }
+.stat-ego          .stat-fill { background: linear-gradient(90deg, var(--peach-light), var(--peach)); }
+.stat-empatia      .stat-fill { background: linear-gradient(90deg, #f8c8e8, #f0a0d0); }
+.stat-drama        .stat-fill { background: linear-gradient(90deg, var(--gold-light), var(--gold)); }
+
+/* ── Secciones de info ── */
 .sheet-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
 .sheet-section {
-  padding: 22px 24px;
+  padding: 18px 20px;
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  animation: floatUp 0.4s ease both;
 }
-.sheet-section:nth-child(even)     { border-right: none; }
-.sheet-section.full-width          { grid-column: 1 / -1; border-right: none; }
+.sheet-section:nth-child(2n) { border-right: none; }
+.sheet-section:last-child,
+.sheet-section:nth-last-child(2) { border-bottom: none; }
+
+.sheet-section:nth-child(1) { animation-delay: 0.05s; }
+.sheet-section:nth-child(2) { animation-delay: 0.10s; }
+.sheet-section:nth-child(3) { animation-delay: 0.15s; }
+.sheet-section:nth-child(4) { animation-delay: 0.20s; }
 
 .section-label {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   color: var(--text-mute);
-  margin-bottom: 14px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
-.section-label::after {
+.section-label::before {
   content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
+  display: inline-block;
+  width: 2px;
+  height: 10px;
+  background: linear-gradient(to bottom, var(--rose), var(--lavender));
+  border-radius: 99px;
 }
 
-/* ── Barras de estadísticas ── */
-.stats-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.stat-row {
-  display: grid;
-  grid-template-columns: 120px 1fr 38px;
-  align-items: center;
-  gap: 10px;
-}
-
-.stat-name {
-  font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  color: var(--text-dim);
-}
-
-.stat-track {
-  height: 8px;
-  background: var(--surface-3);
-  border: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-fill {
-  height: 100%;
-  position: absolute;
-  left: 0; top: 0;
-  transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Color de cada stat */
-.stat-fill[data-stat="carisma"]      { background: var(--gold); }
-.stat-fill[data-stat="manipulacion"] { background: var(--red-bright); }
-.stat-fill[data-stat="lealtad"]      { background: var(--teal-light); }
-.stat-fill[data-stat="ego"]          { background: var(--purple); }
-.stat-fill[data-stat="empatia"]      { background: #6ee7b7; }
-.stat-fill[data-stat="drama"]        { background: #fb923c; }
-
-.stat-value {
-  font-family: var(--font-mono);
-  font-size: 20px;
+.section-text {
+  font-size: 15px;
   color: var(--text);
-  text-align: right;
-}
-
-/* ── Texto narrativo ── */
-.sheet-prose {
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--text);
-}
-
-/* Bloques con acento de color */
-.prose-block {
-  padding: 12px 16px;
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--text);
-  background: var(--surface-2);
-}
-
-.prose-block.red    { border-left: 3px solid var(--red-bright); }
-.prose-block.gold   { border-left: 3px solid var(--gold); }
-.prose-block.teal   { border-left: 3px solid var(--teal-light); }
-.prose-block.purple { border-left: 3px solid var(--purple); }
-
-/* ── Diálogo típico ── */
-.sheet-quote {
-  font-family: var(--font-body);
-  font-size: 20px;
-  font-style: italic;
-  color: var(--teal-light);
-  line-height: 1.6;
-  position: relative;
-  padding: 14px 18px 14px 52px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-lit);
-}
-.sheet-quote::before {
-  content: '❝';
-  position: absolute;
-  left: 14px;
-  top: 10px;
-  font-size: 32px;
-  color: var(--gold);
-  font-style: normal;
-  line-height: 1;
+  line-height: 1.55;
 }
 
 /* ── Misiones ── */
+.sheet-missions {
+  padding: 18px 20px;
+  border-top: 1px solid var(--border);
+  grid-column: 1 / -1;
+}
+
+.missions-title {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.missions-title::before {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 10px;
+  background: linear-gradient(to bottom, var(--rose), var(--lavender));
+  border-radius: 99px;
+}
+
 .mission-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.mission-item {
+.mission-entry {
   display: flex;
-  gap: 12px;
   align-items: flex-start;
-  padding: 10px 14px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  transition: border-color 0.2s;
-}
-.mission-item:hover { border-color: var(--gold); }
-
-.mission-icon {
-  font-size: 20px;
-  line-height: 1.4;
-  flex-shrink: 0;
-}
-.mission-text {
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--text);
-}
-
-/* ── Pie de la ficha ── */
-.sheet-footer {
-  display: flex;
   gap: 10px;
-  padding: 18px 24px;
-  background: var(--surface-2);
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-
-/* ── Responsive ── */
-@media (max-width: 680px) {
-  .sheet-body { grid-template-columns: 1fr; }
-  .sheet-section { border-right: none; }
-  .stat-row { grid-template-columns: 100px 1fr 32px; }
-  .sheet-name { font-size: 24px; }
-}
-
-
-/* ================================================
-   Sprite Editor
-   ================================================ */
-
-.sprite-editor-panel {
-  background: var(--surface-1);
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--rose-pale), var(--lavender-pale));
   border: 1px solid var(--border);
-  border-top: none;
-  padding: 22px 24px;
-  animation: reveal 0.3s ease;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+.mission-entry:hover {
+  border-color: var(--rose-light);
+  transform: translateX(3px);
+}
+
+.mission-entry-icon { font-size: 18px; flex-shrink: 0; }
+.mission-entry-text { font-size: 14px; color: var(--text); line-height: 1.4; }
+
+/* ── Cita ── */
+.sheet-quote {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--rose-pale), var(--lavender-pale));
+  border-top: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.6;
+}
+.sheet-quote::before { content: '🌸 '; }
+.sheet-quote::after  { content: ' 🌸'; }
+
+/* ── Footer de la ficha ── */
+.sheet-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--surface-2);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* ── Botón sprite ── */
+.btn-sprite {
+  background: linear-gradient(135deg, var(--lavender), #9060c0);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(184, 153, 216, 0.4);
+}
+.btn-sprite:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(184, 153, 216, 0.55);
+  transform: translateY(-1px);
+}
+
+/* ── Editor de sprite ── */
+.sprite-editor-panel {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
 }
 
 .sprite-editor {
   display: flex;
-  gap: 28px;
+  gap: 20px;
+  flex-wrap: wrap;
   align-items: flex-start;
 }
 
-.se-preview-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+.se-canvas-wrap {
+  position: relative;
   flex-shrink: 0;
 }
 
 .se-canvas {
-  border: 1px solid var(--border-lit);
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  background: repeating-conic-gradient(
-    #1a1820 0% 25%, #221e2a 0% 50%
-  ) 0 0 / 20px 20px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background:
+    repeating-conic-gradient(var(--surface-2) 0% 25%, transparent 0% 50%)
+    0 0 / 16px 16px;
 }
 
-.se-preview-label {
-  font-family: var(--font-display);
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: var(--text-mute);
-  text-transform: uppercase;
-}
-
-.se-options {
+.se-controls {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  flex: 1;
-}
-
-.se-group {
-  display: flex;
-  align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 180px;
 }
 
 .se-label {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 9px;
+  font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--text-dim);
+  color: var(--text-mute);
   text-transform: uppercase;
-  min-width: 72px;
+  margin-bottom: 5px;
 }
 
 .se-swatches {
   display: flex;
-  gap: 5px;
   flex-wrap: wrap;
+  gap: 5px;
 }
 
 .swatch {
-  width: 22px;
-  height: 22px;
-  border: 2px solid var(--border);
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
   cursor: pointer;
-  transition: transform 0.1s, border-color 0.1s;
-  flex-shrink: 0;
+  border-radius: 50%;
+  transition: all var(--transition);
 }
-
-.swatch:hover  { transform: scale(1.25); border-color: var(--text); }
-.swatch.active {
-  border-color: var(--gold);
-  transform: scale(1.1);
-  box-shadow: 0 0 0 1px var(--gold);
-}
-
-.se-btn-row {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
+.swatch:hover    { transform: scale(1.15); border-color: var(--rose-light); }
+.swatch.active   { border-color: var(--rose); box-shadow: 0 0 0 2px rgba(232,130,154,0.3); transform: scale(1.1); }
 
 .se-opt-btn {
-  font-family: var(--font-display);
-  font-size: 9px;
-  letter-spacing: 0.05em;
-  padding: 5px 11px;
-  border: 1px solid var(--border-lit);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border: 1.5px solid var(--border);
   background: var(--surface-2);
   color: var(--text-dim);
   cursor: pointer;
-  transition: all 0.15s;
-  text-transform: uppercase;
+  border-radius: 99px;
+  transition: all var(--transition-fast);
 }
+.se-opt-btn:hover  { border-color: var(--rose-light); color: var(--rose); background: var(--rose-pale); }
+.se-opt-btn.active { background: linear-gradient(135deg, var(--rose), var(--lavender)); border-color: transparent; color: #fff; }
 
-.se-opt-btn:hover  { border-color: var(--gold); color: var(--gold); }
-.se-opt-btn.active {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--bg);
-}
-
-.se-save-row {
-  margin-top: 6px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-
-/* Botón sprite en sheet footer */
-.btn-sprite {
-  border-color: var(--purple);
-  color: var(--purple);
-}
-.btn-sprite:hover {
-  background: var(--purple);
-  color: #fff;
-}
-
-/* Sprite en tarjetas de la aldea */
+/* ── Galería — sprite en tarjeta ── */
 .card-sprite {
-  float: right;
   width: 40px;
   height: 40px;
   image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  margin: 0 0 4px 8px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
 }
 
 .card-sprite-empty {
-  float: right;
   width: 40px;
   height: 40px;
-  background: var(--surface-2);
-  border: 1px dashed var(--border);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  color: var(--text-mute);
-  margin: 0 0 4px 8px;
-}
-
-@media (max-width: 600px) {
-  .sprite-editor { flex-direction: column; }
-  .se-label { min-width: 56px; }
+  font-size: 14px;
+  opacity: 0.4;
 }
