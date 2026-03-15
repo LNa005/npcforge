@@ -69,6 +69,9 @@ class WorldScene extends Phaser.Scene {
     this._drawTrees();
     this._drawHouses();
     this._drawDecoration();
+    this._drawForestDetails();
+    this._drawFlowers();
+    this._drawLake();
     this._spawnPlayer();
     this._spawnNpcs();
     this._setupCamera();
@@ -464,6 +467,17 @@ class WorldScene extends Phaser.Scene {
   }
 
   _setupInput() {
+    // Desactivar input de Phaser cuando el ratón está sobre el panel de misiones
+    const missionsPanel = document.getElementById('missionsPanel');
+    if (missionsPanel) {
+      missionsPanel.addEventListener('mouseenter', () => {
+        this.input.mouse.enabled = false;
+      });
+      missionsPanel.addEventListener('mouseleave', () => {
+        this.input.mouse.enabled = true;
+      });
+    }
+
     this.cursors = this.input.keyboard.createCursorKeys();
     this.wasd = {
       W: this.input.keyboard.addKey('W'),
