@@ -162,6 +162,6 @@ ${pending.map(({ i, texto }) => `[${i}] ${texto}`).join('\n')}`;
     }, 3500);
   }
 
-  return { show, hide, checkAuto, getState };
+  return { show, hide, checkAuto, getState, _markDone, _showNotification };
 
 })();

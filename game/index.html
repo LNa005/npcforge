@@ -54,6 +54,7 @@
           <button class="dialog-close" onclick="Dialog.close()">✕</button>
         </div>
         <div id="dialogHistory"></div>
+        <div id="dialogOptions" class="dialog-options hidden"></div>
         <div class="dialog-input-row">
           <input type="text" id="dialogInput" placeholder="Di algo…" autocomplete="off"
             onkeydown="if(event.key==='Enter'){ event.stopPropagation(); Dialog.send(); }">

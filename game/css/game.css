@@ -425,3 +425,43 @@
   font-size: 11px;
   color: var(--text);
 }
+
+/* ── Opciones de diálogo ── */
+
+.dialog-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.dialog-options.hidden {
+  display: none;
+}
+
+.dialog-option-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 7px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+
+.dialog-option-btn::before {
+  content: '▸ ';
+  color: var(--gold);
+  font-size: 11px;
+}
+
+.dialog-option-btn:hover {
+  background: var(--surface-1);
+  border-color: var(--gold);
+  color: var(--gold);
+}
