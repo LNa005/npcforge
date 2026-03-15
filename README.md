@@ -18,7 +18,7 @@
 
 Describes a alguien de tu vida. La IA genera una **ficha RPG psicológica** completa — stats, motivación oculta, punto débil, cómo ganarte su confianza y misiones de relación 🔮
 
-Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explorar un mapa top-down** donde caminarás por una aldea con casas, plaza y NPCs que deambulan libremente y responden en personaje gracias a la IA ⚡
+Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explorar un mapa top-down** donde caminarás por una aldea con casas, plaza y NPCs que deambulan libremente, responden en personaje y evolucionan según cómo los tratas ⚡
 
 ---
 
@@ -42,18 +42,22 @@ Luego diseñas su sprite en pixel art, lo guardas en tu aldea, y puedes **explor
 🌸 6 stats psicológicos animados  
 🌸 Editor de sprite pixel art 16×16  
 🌸 Galería "Mi aldea" con tarjetas  
-🌸 Mapa top-down explorable con Phaser.js  
+🌸 Mapa top-down explorable con Phaser.js — pantalla completa  
 🌸 Plaza central con adoquines, fuente, faroles y bancos  
 🌸 Una casa por cada NPC con tejado de color único  
 🌸 Nombre del NPC sobre la puerta de su casa  
-🌸 Nombre del NPC flotante encima de su sprite  
+🌸 Nombre flotante encima del sprite del NPC en el mapa  
 🌸 NPCs con movimiento libre (wandering por su zona)  
+🌸 Colisionadores en casas, árboles y fuente  
 🌸 Avatar del jugador personalizable con editor de sprite  
 🌸 Chat con NPCs en personaje vía Mistral  
-🌸 Teclado capturado correctamente durante el chat (espacio y WASD)  
+🌸 Teclado capturado correctamente durante el chat  
+🌸 Opciones de diálogo clicables — la IA decide cuándo presentarlas  
 🌸 Panel de misiones activas — aparece al acercarte a un NPC  
-🌸 Colisionadores en casas, árboles y fuente  
-🌸 Mapa pantalla completa  
+🌸 Misiones que se completan automáticamente durante el chat  
+🌸 Notificación dorada al completar una misión  
+🌸 Stats que evolucionan según cómo hablas con el NPC  
+🌸 Chips de cambio de stats visibles en el chat (+/- por cada stat)  
 🌸 Sin servidor, sin registro — todo en `localStorage` 🌷  
 
 ---
@@ -82,52 +86,44 @@ npcforge/
     │   └── game.css
     └── js/
         ├── world.js     ← Mapa Phaser
-        ├── dialog.js    ← Chat con NPCs
-        └── missions.js  ← Sistema de misiones
+        ├── dialog.js    ← Chat con opciones de diálogo
+        ├── missions.js  ← Sistema de misiones
+        └── stats.js     ← Stats dinámicos
 ```
 
 ---
 
 ## 🗺️ Hoja de ruta
 
-### 🐛 Bugs pendientes
-- [ ] 🐛 Interacción con botones del panel de misiones (Phaser captura los clicks)
-
-### 📋 Fase 4 — Sistema de misiones *(en progreso)*
-- [x] 🌸 Panel HUD con las 3 misiones del NPC cercano
-- [x] 🌸 Se muestra/oculta automáticamente por proximidad
-- [ ] 🌸 Marcar misiones como completadas (bug de clicks pendiente)
-- [ ] 🌸 Evento / recompensa al completar una misión
-- [ ] 🌸 Historial de misiones completadas
-
-### 📈 Fase 5 — Relaciones vivas
-- [ ] 💹 Stats que evolucionan según cómo hablas con el NPC
-- [ ] 🔔 Indicador visual de cambio de stat tras conversación
-- [ ] ❤️ Nivel de relación global (desconocido → aliado → rival…)
+### 📈 Fase 5 — Relaciones vivas *(en progreso)*
+- [x] 🌸 Stats que evolucionan según cómo hablas con el NPC
+- [x] 🌸 Chips visuales de cambio de stat en el chat
+- [ ] 🌸 Nivel de relación global (desconocido → aliado → rival…)
+- [ ] 🌸 Historial de relación con cada NPC
 
 ### 🎮 Fase 6 — Animaciones
-- [ ] 🚶 Caminar en 4 direcciones (sprite sheet)
-- [ ] 💤 Idle animation
-- [ ] 🌀 Animación de NPCs más natural
+- [ ] 🌸 Caminar en 4 direcciones (sprite sheet)
+- [ ] 🌸 Idle animation
+- [ ] 🌸 Animación de NPCs más natural
 
 ### 📱 Fase 7 — App nativa
-- [ ] 🖥️ Versión de escritorio (Electron o Tauri)
-- [ ] 📱 Versión móvil (Capacitor o PWA)
-- [ ] 🕹️ Controles táctiles para el mapa
+- [ ] 🌸 Versión de escritorio (Electron o Tauri)
+- [ ] 🌸 Versión móvil (Capacitor o PWA)
+- [ ] 🌸 Controles táctiles para el mapa
 
 ### 🌐 Fase 8 — Servidor y multijugador
-- [ ] 🗄️ Backend propio (Node.js + base de datos)
-- [ ] 🔐 Registro y login de usuarios
-- [ ] ☁️ Aldeas guardadas en la nube
-- [ ] 👥 Multijugador — *por definir* (¿visitar aldeas ajenas? ¿eventos globales? ¿NPCs compartidos?)
+- [ ] 🌸 Backend propio (Node.js + base de datos)
+- [ ] 🌸 Registro y login de usuarios
+- [ ] 🌸 Aldeas guardadas en la nube
+- [ ] 🌸 Multijugador — *por definir* (¿visitar aldeas ajenas? ¿eventos globales? ¿NPCs compartidos?)
 
 ### 🌈 Ideas futuras
-- [ ] 📸 Exportar ficha como imagen compartible
-- [ ] ⚖️ Comparar dos NPCs
-- [ ] 💾 Backup / import JSON de la aldea completa
-- [ ] 🌍 Explorar aldeas públicas de otros jugadores
-- [ ] 🎵 Música y efectos de sonido ambient
-- [ ] 🌦️ Ciclo día/noche en el mapa
+- [ ] 🌸 Exportar ficha como imagen compartible
+- [ ] 🌸 Comparar dos NPCs
+- [ ] 🌸 Backup / import JSON de la aldea completa
+- [ ] 🌸 Explorar aldeas públicas de otros jugadores
+- [ ] 🌸 Música y efectos de sonido ambient
+- [ ] 🌸 Ciclo día/noche en el mapa
 
 ---
 
@@ -151,6 +147,6 @@ npcforge/
 
 <div align="center">
 
-*Hecho con demasiado amor, mostersito y ganas 💜*
+*Hecho con demasiado amor, "mostesito" y ganas 💜*
 
 </div>
