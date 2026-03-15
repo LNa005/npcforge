@@ -392,8 +392,125 @@ class WorldScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(7);
   }
 
-  /* ──────────────────── JUGADOR ──────────────────── */
 
+  /* ── Detalles del bosque: arbustos y rocas ── */
+  _drawForestDetails() {
+    const g = this.add.graphics().setDepth(4);
+    const cx = Math.floor(MAP / 2);
+
+    for (let y = 0; y < MAP; y++) {
+      for (let x = 0; x < MAP; x++) {
+        if (this.mapGrid[y][x] !== 'tree') continue;
+        const dx = Math.abs(x - cx);
+        const dy = Math.abs(y - cx);
+        if (dx < 22 && dy < 22) continue;
+
+        const px = x * TILE, py = y * TILE;
+        const r  = (x * 11 + y * 17) % 5;
+
+        if (r === 0) {
+          g.fillStyle(0x2d5a1a).fillRect(px + 1, py + 9,  14, 6);
+          g.fillStyle(0x3a7222).fillRect(px + 3, py + 7,  10, 5);
+          g.fillStyle(0x4a8a2a).fillRect(px + 5, py + 6,  6,  4);
+        } else if (r === 1) {
+          g.fillStyle(0x7a7a7a).fillRect(px + 4, py + 10, 8, 5);
+          g.fillStyle(0x9a9a9a).fillRect(px + 5, py + 9,  6, 3);
+          g.fillStyle(0x5a5a5a).fillRect(px + 4, py + 13, 8, 2);
+        } else if (r === 2) {
+          g.fillStyle(0x6a6a72).fillRect(px + 2, py + 8,  12, 7);
+          g.fillStyle(0x8a8a94).fillRect(px + 3, py + 7,  10, 4);
+          g.fillStyle(0x4a4a52).fillRect(px + 2, py + 13, 12, 2);
+          g.fillStyle(0xaaaaaa).fillRect(px + 5, py + 7,  4,  2);
+        }
+      }
+    }
+  }
+
+  /* ── Flores en la zona central ── */
+  _drawFlowers() {
+    const g  = this.add.graphics().setDepth(1);
+    const cx = Math.floor(MAP / 2);
+    const flowerColors = [0xff88aa, 0xffaacc, 0xffcc88, 0xcc88ff, 0x88ccff];
+
+    for (let y = 0; y < MAP; y++) {
+      for (let x = 0; x < MAP; x++) {
+        if (this.mapGrid[y][x] !== 'grass') continue;
+        const dx = Math.abs(x - cx);
+        const dy = Math.abs(y - cx);
+        if (dx > 20 || dy > 20) continue;
+        if (dx < 6 && dy < 6)  continue;
+
+        const seed = (x * 31 + y * 17) % 10;
+        if (seed > 2) continue;
+
+        const px = x * TILE, py = y * TILE;
+        const colorIdx = (x * 3 + y * 7) % flowerColors.length;
+
+        g.fillStyle(0x4a8a30).fillRect(px + 7, py + 10, 2, 5);
+        g.fillStyle(flowerColors[colorIdx])
+          .fillRect(px + 6, py + 8,  4, 2)
+          .fillRect(px + 6, py + 12, 4, 2)
+          .fillRect(px + 4, py + 10, 2, 2)
+          .fillRect(px + 10, py + 10, 2, 2);
+        g.fillStyle(0xffff88).fillRect(px + 7, py + 10, 2, 2);
+      }
+    }
+  }
+
+  /* ── Lago en la esquina noreste ── */
+  _drawLake() {
+    const g  = this.add.graphics().setDepth(1);
+    const cx = Math.floor(MAP / 2);
+    const lx = cx + 13;
+    const ly = cx - 17;
+    const W  = 7, H = 5;
+
+    for (let dy = 0; dy < H; dy++) {
+      for (let dx = 0; dx < W; dx++) {
+        const px = (lx + dx) * TILE;
+        const py = (ly + dy) * TILE;
+        const edge = dx === 0 || dx === W-1 || dy === 0 || dy === H-1;
+
+        if (edge) {
+          g.fillStyle(0x5a9aaa).fillRect(px, py, TILE, TILE);
+        } else {
+          g.fillStyle(0x4a8aaa).fillRect(px, py, TILE, TILE);
+          if ((dx + dy) % 3 === 0) {
+            g.fillStyle(0x7abccc).fillRect(px + 3, py + 3, 4, 2);
+          }
+        }
+
+        const my = ly + dy, mx = lx + dx;
+        if (my >= 0 && my < MAP && mx >= 0 && mx < MAP) {
+          this.mapGrid[my][mx] = 'water';
+        }
+      }
+    }
+
+    g.fillStyle(0x5a7a4a);
+    for (let dx = -1; dx <= W; dx++) {
+      g.fillRect((lx + dx) * TILE, (ly - 1) * TILE, TILE, TILE);
+      g.fillRect((lx + dx) * TILE, (ly + H) * TILE, TILE, TILE);
+    }
+    for (let dy2 = 0; dy2 < H; dy2++) {
+      g.fillRect((lx - 1) * TILE, (ly + dy2) * TILE, TILE, TILE);
+      g.fillRect((lx + W) * TILE, (ly + dy2) * TILE, TILE, TILE);
+    }
+
+    const zone = this.physics.add.staticSprite(
+      (lx + W/2) * TILE, (ly + H/2) * TILE, 'collider_px'
+    ).setVisible(false).setAlpha(0);
+    zone.setBodySize(W * TILE - 4, H * TILE - 4);
+    zone.refreshBody();
+    this.solidGroup.add(zone);
+
+    this.add.text(
+      (lx + W/2) * TILE, (ly + H/2) * TILE,
+      '🌊', { fontSize: '10px' }
+    ).setOrigin(0.5).setDepth(2);
+  }
+
+  /* ──────────────────── JUGADOR ──────────────────── */
   _spawnPlayer() {
     const cx = Math.floor(MAP / 2) * TILE + TILE/2;
 
