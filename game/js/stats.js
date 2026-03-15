@@ -114,6 +114,39 @@ Responde SOLO con JSON:
     h.scrollTop = h.scrollHeight;
   }
 
-  return { getStats, evaluate, showChanges, STAT_LABELS };
+  /* ── Nivel de relación global ── */
+  const LEVELS = [
+    { min: -999, max: -30, key: 'enemiga',     label: '💀 Enemiga',      color: '#e05555' },
+    { min:  -30, max: -10, key: 'rival',       label: '⚔️ Rival',         color: '#f0a878' },
+    { min:  -10, max:  15, key: 'desconocida', label: '🌫️ Desconocida',   color: '#caaed8' },
+    { min:   15, max:  35, key: 'conocida',    label: '🌸 Conocida',      color: '#f4afc0' },
+    { min:   35, max: 999, key: 'aliada',      label: '💜 Aliada',        color: '#b899d8' },
+  ];
+
+  function getRelationLevel(npcId) {
+    const stats  = _load()[npcId];
+    if (!stats) return LEVELS[2]; // desconocida por defecto
+    // Puntuación = promedio de cambios respecto a 50 (base)
+    // empatia y lealtad suman, ego y manipulacion restan
+    const score =
+      (stats.empatia  || 50) - 50 +
+      (stats.lealtad  || 50) - 50 -
+      ((stats.manipulacion || 50) - 50) * 0.5 -
+      ((stats.ego     || 50) - 50) * 0.3 +
+      (stats.carisma  || 50) - 50;
+    return LEVELS.find(l => score >= l.min && score < l.max) || LEVELS[2];
+  }
+
+  function updateRelationBadge(npcId) {
+    const el = document.getElementById('relationBadge');
+    if (!el) return;
+    const level = getRelationLevel(npcId);
+    el.textContent  = level.label;
+    el.style.color  = level.color;
+    el.style.borderColor = level.color + '55';
+    el.style.background  = level.color + '18';
+  }
+
+  return { getStats, evaluate, showChanges, getRelationLevel, updateRelationBadge, STAT_LABELS };
 
 })();
