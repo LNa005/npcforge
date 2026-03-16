@@ -79,10 +79,12 @@ Diseñas su sprite en pixel art. Lo guardas en tu aldea. Exploras un mapa top-do
 - 🌸 Una casa por cada NPC con tejado de color único
 - 🌸 Bosque exterior con árboles de 3 tamaños distintos
 - 🌸 Arbustos y rocas decorativas en el bosque
-- 🌸 Flores de colores pastel en la zona central
-- 🌸 Lago con colisionador en la esquina del mapa
-- 🌸 NPCs con movimiento libre por su zona
-- 🌸 Avatar del jugador personalizable
+- 🌸 Flores de colores pastel en la zona central (sin invadir caminos ni casas)
+- 🌸 Lago orgánico con orilla de arena, nenúfares y pájaros
+- 🌸 NPCs con movimiento libre (wandering por su zona)
+- 🌸 Nombre flotante encima de cada NPC
+- 🌸 Avatar del jugador personalizable con editor de sprite
+- 🌸 Colisionadores en casas, árboles, fuente y lago
 
 </details>
 
@@ -94,7 +96,11 @@ Diseñas su sprite en pixel art. Lo guardas en tu aldea. Exploras un mapa top-do
 - 🌸 Opciones de diálogo clicables — la IA decide cuándo presentarlas
 - 🌸 Panel de misiones activas al acercarte a un NPC
 - 🌸 Misiones que se completan automáticamente durante el chat
-- 🌸 Notificación animada al completar una misión
+- 🌸 Al completar las 3 misiones, la IA genera 3 nuevas más profundas
+- 🌸 Las misiones completadas desaparecen del panel
+- 🌸 Contador de misiones completadas en total con ese NPC
+- 🌸 Notificación animada al completar — especial al completar todas
+- 🌸 Historial de misiones guardado en `localStorage`
 
 </details>
 
@@ -151,7 +157,7 @@ npcforge/
     └── 📁 js/
         ├── world.js      ✦ Mapa Phaser, NPCs, decoración
         ├── dialog.js     ✦ Chat con opciones de diálogo
-        ├── missions.js   ✦ Sistema de misiones
+        ├── missions.js   ✦ Misiones dinámicas con historial
         └── stats.js      ✦ Stats dinámicos + relaciones
 ```
 
@@ -159,32 +165,27 @@ npcforge/
 
 ## 🗺️ Hoja de ruta
 
-### 🐛 Pendiente / bugs
-- [ ] 🌊 Mejorar el lago — forma y detalle visual
-- [ ] 🌸 Quitar flores de encima de caminos y casas
-- [ ] 📸 Actualizar screenshots con el nuevo diseño pastel
+### 🐛 Bugs pendientes
+- [ ] 📸 Actualizar screenshots con el nuevo diseño
 
 ### 🏆 Sistema de logros *(planificado)*
-- [ ] 🌸 Logros globales — "Completa 100 misiones con un NPC", "Habla con 5 NPCs distintos", etc.
-- [ ] 🌸 Panel de logros desbloqueados con notificación al conseguirlos
-- [ ] 🌸 Insignias visibles en la ficha de cada NPC
-
-### 🔄 Misiones dinámicas *(planificado)*
-- [ ] 🌸 Al completar las 3 misiones de un NPC, se generan 3 nuevas vía IA
-- [ ] 🌸 Las misiones completadas desaparecen del panel
-- [ ] 🌸 Historial de misiones completadas por NPC
+- [ ] 🌸 Logros globales — "Completa 100 misiones", "Habla con 5 NPCs distintos"…
+- [ ] 🌸 Panel de logros con insignias
+- [ ] 🌸 Notificación al desbloquear un logro
 
 ### 📋 Fase 4 — Misiones *(completada)*
 - [x] 🌸 Panel HUD con misiones activas
 - [x] 🌸 Completar misiones durante el chat con IA
 - [x] 🌸 Notificación animada al completar
 - [x] 🌸 Opciones de diálogo clicables
+- [x] 🌸 Misiones dinámicas — nuevas al completar el ciclo
+- [x] 🌸 Historial de misiones completadas por NPC
 
 ### 📈 Fase 5 — Relaciones vivas *(en progreso)*
 - [x] 🌸 Stats evolutivos con chips visuales
 - [x] 🌸 Nivel de relación global (5 estados)
 - [x] 🌸 Badge de relación en tiempo real
-- [ ] 🌸 Historial de relación con cada NPC
+- [ ] 🌸 Historial de conversaciones con cada NPC
 
 ### 🎮 Fase 6 — Animaciones
 - [ ] 🌸 Caminar en 4 direcciones (sprite sheet)
