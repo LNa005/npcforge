@@ -432,13 +432,33 @@ class WorldScene extends Phaser.Scene {
     const cx = Math.floor(MAP / 2);
     const flowerColors = [0xff88aa, 0xffaacc, 0xffcc88, 0xcc88ff, 0x88ccff];
 
+    // Posiciones de casas para excluir su zona
+    const housePos = this._housePositions();
+    const houseZones = housePos.map(({ ox, oy }) => ({
+      x: cx + ox, y: cx + oy
+    }));
+
+    const SAFE_TILES = new Set(['path', 'plaza', 'water', 'sand', 'tree']);
+
     for (let y = 0; y < MAP; y++) {
       for (let x = 0; x < MAP; x++) {
+        // Solo hierba limpia
+        if (SAFE_TILES.has(this.mapGrid[y][x])) continue;
         if (this.mapGrid[y][x] !== 'grass') continue;
+
         const dx = Math.abs(x - cx);
         const dy = Math.abs(y - cx);
-        if (dx > 20 || dy > 20) continue;
-        if (dx < 6 && dy < 6)  continue;
+        if (dx > 20 || dy > 20) continue; // solo zona interior
+        if (dx < 6  && dy < 6)  continue; // no en la plaza
+
+        // No en los caminos cardinales (franja de 2 tiles)
+        if (Math.abs(x - cx) <= 2 || Math.abs(y - cx) <= 2) continue;
+
+        // No cerca de las casas (radio de 4 tiles)
+        const nearHouse = houseZones.some(h =>
+          Math.abs(x - h.x) <= 4 && Math.abs(y - h.y) <= 4
+        );
+        if (nearHouse) continue;
 
         const seed = (x * 31 + y * 17) % 10;
         if (seed > 2) continue;
