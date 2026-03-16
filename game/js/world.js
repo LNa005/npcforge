@@ -459,55 +459,113 @@ class WorldScene extends Phaser.Scene {
 
   /* ── Lago en la esquina noreste ── */
   _drawLake() {
-    const g  = this.add.graphics().setDepth(1);
-    const cx = Math.floor(MAP / 2);
-    const lx = cx + 13;
-    const ly = cx - 17;
-    const W  = 7, H = 5;
+    const g   = this.add.graphics().setDepth(1);
+    const fg  = this.add.graphics().setDepth(3);
+    const cx  = Math.floor(MAP / 2);
+    // Origen del lago — esquina noreste, alejado de casas y caminos
+    const ox  = cx + 12;
+    const oy  = cx - 18;
+
+    // Forma orgánica del lago: matriz de tiles true/false
+    // 0=fuera, 1=orilla/arena, 2=agua poco profunda, 3=agua profunda
+    const shape = [
+      [0,0,1,1,1,1,0,0,0],
+      [0,1,2,2,2,2,1,1,0],
+      [1,2,3,3,3,2,2,2,1],
+      [1,2,3,3,3,3,2,2,1],
+      [0,1,2,3,3,2,2,1,0],
+      [0,0,1,2,2,2,1,0,0],
+      [0,0,0,1,1,1,0,0,0],
+    ];
+
+    const H = shape.length;
+    const W = shape[0].length;
+
+    // Colores del agua
+    const SAND  = 0xc8b88a;  // orilla arena
+    const SAND2 = 0xb8a87a;  // orilla oscura
+    const WAT1  = 0x6aaccc;  // agua poco profunda
+    const WAT2  = 0x4a8aaa;  // agua media
+    const WAT3  = 0x3a6a8a;  // agua profunda
+    const SHINE = 0x8ad4ee;  // brillo
 
     for (let dy = 0; dy < H; dy++) {
       for (let dx = 0; dx < W; dx++) {
-        const px = (lx + dx) * TILE;
-        const py = (ly + dy) * TILE;
-        const edge = dx === 0 || dx === W-1 || dy === 0 || dy === H-1;
+        const v  = shape[dy][dx];
+        if (v === 0) continue;
+        const px = (ox + dx) * TILE;
+        const py = (oy + dy) * TILE;
+        const mx = ox + dx, my = oy + dy;
 
-        if (edge) {
-          g.fillStyle(0x5a9aaa).fillRect(px, py, TILE, TILE);
-        } else {
-          g.fillStyle(0x4a8aaa).fillRect(px, py, TILE, TILE);
-          if ((dx + dy) % 3 === 0) {
-            g.fillStyle(0x7abccc).fillRect(px + 3, py + 3, 4, 2);
+        if (v === 1) {
+          // Orilla: arena con variación
+          const dark = (dx + dy) % 3 === 0;
+          g.fillStyle(dark ? SAND2 : SAND).fillRect(px, py, TILE, TILE);
+          // Piedrecitas
+          if ((dx * 5 + dy * 3) % 7 === 0) {
+            g.fillStyle(0xa09070).fillRect(px + 5, py + 8, 3, 2);
           }
-        }
-
-        const my = ly + dy, mx = lx + dx;
-        if (my >= 0 && my < MAP && mx >= 0 && mx < MAP) {
-          this.mapGrid[my][mx] = 'water';
+          if (my >= 0 && my < MAP && mx >= 0 && mx < MAP) {
+            this.mapGrid[my][mx] = 'sand';
+          }
+        } else {
+          // Agua
+          const col = v === 2 ? WAT1 : v === 3 ? WAT3 : WAT2;
+          g.fillStyle(col).fillRect(px, py, TILE, TILE);
+          // Reflejos animados (estáticos pero variados)
+          if ((dx + dy * 2) % 4 === 0) {
+            g.fillStyle(SHINE).fillRect(px + 2, py + 4, 5, 1);
+            g.fillStyle(SHINE).fillRect(px + 8, py + 10, 4, 1);
+          }
+          if ((dx * 3 + dy) % 5 === 0) {
+            g.fillStyle(WAT1).fillRect(px + 6, py + 7, 3, 1);
+          }
+          if (my >= 0 && my < MAP && mx >= 0 && mx < MAP) {
+            this.mapGrid[my][mx] = 'water';
+          }
         }
       }
     }
 
-    g.fillStyle(0x5a7a4a);
-    for (let dx = -1; dx <= W; dx++) {
-      g.fillRect((lx + dx) * TILE, (ly - 1) * TILE, TILE, TILE);
-      g.fillRect((lx + dx) * TILE, (ly + H) * TILE, TILE, TILE);
-    }
-    for (let dy2 = 0; dy2 < H; dy2++) {
-      g.fillRect((lx - 1) * TILE, (ly + dy2) * TILE, TILE, TILE);
-      g.fillRect((lx + W) * TILE, (ly + dy2) * TILE, TILE, TILE);
+    // Nenúfares en el agua profunda
+    const lilySpots = [
+      [2,2],[5,3],[3,4],[6,2],[4,1]
+    ];
+    lilySpots.forEach(([ldx, ldy]) => {
+      if (shape[ldy] && shape[ldy][ldx] >= 2) {
+        const px = (ox + ldx) * TILE;
+        const py = (oy + ldy) * TILE;
+        // Hoja verde
+        fg.fillStyle(0x3a8a3a).fillCircle(px + 8, py + 8, 5);
+        fg.fillStyle(0x4aaa4a).fillCircle(px + 7, py + 7, 3);
+        // Flor rosa
+        fg.fillStyle(0xffaacc).fillRect(px + 6, py + 5, 4, 2);
+        fg.fillStyle(0xffaacc).fillRect(px + 5, py + 6, 2, 4);
+        fg.fillStyle(0xffaacc).fillRect(px + 7, py + 6, 2, 4);
+        fg.fillStyle(0xffeeaa).fillRect(px + 7, py + 7, 2, 2);
+      }
+    });
+
+    // Colisionadores para los tiles de agua (evitar caminar encima)
+    for (let dy = 0; dy < H; dy++) {
+      for (let dx = 0; dx < W; dx++) {
+        if (shape[dy][dx] < 2) continue; // solo agua, no arena
+        const zone = this.physics.add.staticSprite(
+          (ox + dx) * TILE + TILE/2,
+          (oy + dy) * TILE + TILE/2,
+          'collider_px'
+        ).setVisible(false).setAlpha(0);
+        zone.setBodySize(TILE - 1, TILE - 1);
+        zone.refreshBody();
+        this.solidGroup.add(zone);
+      }
     }
 
-    const zone = this.physics.add.staticSprite(
-      (lx + W/2) * TILE, (ly + H/2) * TILE, 'collider_px'
-    ).setVisible(false).setAlpha(0);
-    zone.setBodySize(W * TILE - 4, H * TILE - 4);
-    zone.refreshBody();
-    this.solidGroup.add(zone);
-
-    this.add.text(
-      (lx + W/2) * TILE, (ly + H/2) * TILE,
-      '🌊', { fontSize: '10px' }
-    ).setOrigin(0.5).setDepth(2);
+    // Pájaros decorativos encima
+    fg.fillStyle(0x4a6a8a);
+    fg.fillRect((ox + 4) * TILE + 2, (oy + 1) * TILE + 4, 4, 2);
+    fg.fillRect((ox + 4) * TILE,     (oy + 1) * TILE + 3, 2, 1);
+    fg.fillRect((ox + 4) * TILE + 6, (oy + 1) * TILE + 3, 2, 1);
   }
 
   /* ──────────────────── JUGADOR ──────────────────── */
