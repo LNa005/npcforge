@@ -207,12 +207,16 @@ class WorldScene extends Phaser.Scene {
       for (let i = 5; i <= 18; i++) {
         const px = (cx + dx * i) * TILE;
         const py = (cx + dy * i) * TILE;
-        // camino de 2 tiles de ancho
         for (let w = -1; w <= 1; w++) {
           const bx = px + (dy !== 0 ? w * TILE : 0);
           const by = py + (dx !== 0 ? w * TILE : 0);
           g.fillStyle(C.path).fillRect(bx, by, TILE, TILE);
           g.fillStyle(C.pathHi).fillRect(bx + 2, by + 4, 3, 2).fillRect(bx + 9, by + 10, 3, 2);
+          const gx = Math.floor(bx / TILE);
+          const gy = Math.floor(by / TILE);
+          if (gy >= 0 && gy < MAP && gx >= 0 && gx < MAP) {
+            this.mapGrid[gy][gx] = 'path';
+          }
         }
       }
     });
@@ -347,6 +351,16 @@ class WorldScene extends Phaser.Scene {
       }).setOrigin(0.5, 1).setDepth(20);
     }
 
+    // Marcar zona de la casa en el mapGrid
+    for (let gy = -4; gy <= 4; gy++) {
+      for (let gx2 = -4; gx2 <= 4; gx2++) {
+        const mx = Math.floor(wx / TILE) + gx2;
+        const my = Math.floor(wy / TILE) + gy;
+        if (my >= 0 && my < MAP && mx >= 0 && mx < MAP) {
+          this.mapGrid[my][mx] = 'house';
+        }
+      }
+    }
     // Colisionador de la casa
     const z = this.physics.add.staticSprite(wx, wy - 6, 'collider_px').setVisible(false).setAlpha(0);
     z.setBodySize(W - 4, H - 4);
@@ -432,13 +446,7 @@ class WorldScene extends Phaser.Scene {
     const cx = Math.floor(MAP / 2);
     const flowerColors = [0xff88aa, 0xffaacc, 0xffcc88, 0xcc88ff, 0x88ccff];
 
-    // Posiciones de casas para excluir su zona
-    const housePos = this._housePositions();
-    const houseZones = housePos.map(({ ox, oy }) => ({
-      x: cx + ox, y: cx + oy
-    }));
-
-    const SAFE_TILES = new Set(['path', 'plaza', 'water', 'sand', 'tree']);
+    const SAFE_TILES = new Set(['path', 'plaza', 'water', 'sand', 'tree', 'house']);
 
     for (let y = 0; y < MAP; y++) {
       for (let x = 0; x < MAP; x++) {
@@ -454,11 +462,7 @@ class WorldScene extends Phaser.Scene {
         // No en los caminos cardinales (franja de 2 tiles)
         if (Math.abs(x - cx) <= 2 || Math.abs(y - cx) <= 2) continue;
 
-        // No cerca de las casas (radio de 4 tiles)
-        const nearHouse = houseZones.some(h =>
-          Math.abs(x - h.x) <= 4 && Math.abs(y - h.y) <= 4
-        );
-        if (nearHouse) continue;
+        // Casas y caminos ya filtrados por mapGrid
 
         const seed = (x * 31 + y * 17) % 10;
         if (seed > 2) continue;
