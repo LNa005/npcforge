@@ -164,6 +164,16 @@ npcforge/
 - [ ] 🌸 Quitar flores de encima de caminos y casas
 - [ ] 📸 Actualizar screenshots con el nuevo diseño pastel
 
+### 🏆 Sistema de logros *(planificado)*
+- [ ] 🌸 Logros globales — "Completa 100 misiones con un NPC", "Habla con 5 NPCs distintos", etc.
+- [ ] 🌸 Panel de logros desbloqueados con notificación al conseguirlos
+- [ ] 🌸 Insignias visibles en la ficha de cada NPC
+
+### 🔄 Misiones dinámicas *(planificado)*
+- [ ] 🌸 Al completar las 3 misiones de un NPC, se generan 3 nuevas vía IA
+- [ ] 🌸 Las misiones completadas desaparecen del panel
+- [ ] 🌸 Historial de misiones completadas por NPC
+
 ### 📋 Fase 4 — Misiones *(completada)*
 - [x] 🌸 Panel HUD con misiones activas
 - [x] 🌸 Completar misiones durante el chat con IA
